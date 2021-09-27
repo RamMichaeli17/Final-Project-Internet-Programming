@@ -1,5 +1,3 @@
-package src;
-
 /**
  * Represents a location in a Matrix based on row and column
  */
