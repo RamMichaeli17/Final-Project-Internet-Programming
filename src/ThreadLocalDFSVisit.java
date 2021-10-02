@@ -106,5 +106,121 @@ public class ThreadLocalDFSVisit<T> {
 
         return connectedComponent;
         }
+
+
+    /**
+     * submarine: the function count number of valid submarines
+     * @param hashSetList type: HashSet<HashSet<Index>>
+     * @param primitiveMatrix type: int[][]
+     * @return int
+     */
+    public int CheckSub(HashSet<HashSet<Index>> hashSetList, int[][] primitiveMatrix) {
+        int count = hashSetList.size(), minRow = 10000, minCol = 10000, maxRow = -1, maxCol = -1;
+        int flag = 0;
+        for (HashSet<Index> s : hashSetList) {
+            for (Index index : s) {
+
+                if (s.size() == 1) {
+                    flag = 1;
+                }
+                if (flag == 1)
+                    count--;
+                flag = 0;
+                if (index.row <= minRow)
+                    minRow = index.row;
+                if (index.column <= minCol)
+                    minCol = index.column;
+                if (index.row > maxRow)
+                    maxRow = index.row;
+                if (index.column > maxCol)
+                    maxCol = index.column;
+            }
+
+            for (int i = minRow; i <= maxRow; i++) {
+                for (int j = minCol; j <= maxCol; j++) {
+                    if (primitiveMatrix[i][j] == 0) {
+                        flag = 1;
+                    }
+
+                }
+
+            }
+            if (flag == 1)
+                count--;
+            flag = 0;
+            minRow = 10000;
+            minCol = 10000;
+            maxRow = -1;
+            maxCol = -1;
+        }
+        if (count < 0)
+            count = 0;
+        return count;
     }
 
+}
+
+
+/**Option 2 */
+
+//
+//public class SubCheck {
+//
+//    /**
+//     * @param primitiveMatrix 2 dimension array
+//     * This function uses the first algorithm (task 1) in order to receive all connected component in the given matrix
+//     * for each component call to auxiliary function (isValidSubmarine) and increase the results if it's
+//     * a valid submarine (square or rectangle)
+//     */
+//
+//    public static int countValidSubmarines(int[][] primitiveMatrix) throws IllegalArgumentException {
+//
+//        /**List<HashSet<Index>> connectedComponents = find connectednode(primitiveMatrix);
+//         */
+//        int result = 0;
+//        // Validate the connected components
+//        // Go over all the components and checks if it's a valid submarine
+//        // If the connected component is a square or a rectangle add 1 to result
+//        // Using auxiliary function: isValidSubmarine
+//        for(HashSet<Index> component : connectedComponents) {
+//            result += isValidSubmarine(component);
+//        }
+//        return result;
+//    }
+//
+//
+//
+//    /**
+//     * Auxiliary function for the submarine algorithm
+//     * @param connectedComponent HashSet of Index objects (connected component)
+//     * This function receives a HashSet of indices (connected component) and checks if is contains
+//     * at least two indices and its a rectangle or a square
+//     */
+//    private static int isValidSubmarine(HashSet<Index> connectedComponent) {
+//        // the component should contain at least two elements (indices)
+//        if (connectedComponent.size() < 2) {
+//            return 0;
+//        }
+//        // find the edges of the component to check if it is a rectangle
+//        int rightEdge = Collections.max(connectedComponent, Comparator.comparingInt(Index::getColumn)).getColumn();
+//        int leftEdge = Collections.min(connectedComponent, Comparator.comparingInt(Index::getColumn)).getColumn();
+//        int bottomEdge = Collections.max(connectedComponent, Comparator.comparingInt(Index::getRow)).getRow();
+//        int topEdge = Collections.min(connectedComponent, Comparator.comparingInt(Index::getRow)).getRow();
+//
+//        // calculate the number of expected element of the rectangle
+//        int numOfExpectedElements = (rightEdge - leftEdge + 1) * (bottomEdge - topEdge + 1);
+//
+//        // If the expected number of element equals to number of the element in the component (size)
+//        // so it's a valid submarine
+//        if (connectedComponent.size() == numOfExpectedElements) {
+//            return 1;
+//        }
+//        return 0;
+//    }
+//
+//
+//
+//}
+//
+//
+//
