@@ -1,8 +1,6 @@
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-
 /**
  * When we need to make sure that every thread has its own local data structures  - synchronization is not the solution.
  * TLS- Thread Local Storage
@@ -29,7 +27,7 @@ public class ThreadLocalDFSVisit<T> {
      * parallelDFSVisitTraverse is function that find SCC parallely.
      * why hashSet? HashSet is a collection of items where every item is unique - we doesn't want multiplication
      *
-     * @param SomeGraph represent current Graph (we relating matrix as graph)
+     * @param SomeGraph represent current Graph (we relate matrix as graph)
      * @param listOfIndex represent indexes to run on them
      * @return HashSet<HashSet<T>> - list of all SCCs in the current graph
      */
@@ -61,8 +59,7 @@ public class ThreadLocalDFSVisit<T> {
                     e.printStackTrace();
                 }
             }
-
-            this.threadPoolExecutor.shutdown();
+        this.threadPoolExecutor.shutdown();
         return listIndexScc;
     }
 
@@ -100,11 +97,37 @@ public class ThreadLocalDFSVisit<T> {
         List<T> connectedComponent = new ArrayList<>();
         for (Node<T> node : threadLocalSet.get()) connectedComponent.add(node.getData());
 
-        //add explain why we need this
+
+        //A scan cycle does not mean that the copy of the data structure has been deleted, so it is necessary to delete the data in the copy
+        //Old data is saved in that specific thread's copy of the data stracture- we ought to clear between traversals using the same threads.
         threadLocalStack.get().clear(); //there is no reason to clear the stack other than readability
         threadLocalSet.get().clear();
 
         return connectedComponent;
         }
-    }
+
+   /* public static void main(String[] args) {
+        int[][] myArray = {
+                {1,1,1,1,1},
+                {0,0,1,1,1},
+                {0,0,0,0,0},
+                {0,1,0,1,0},
+                {0,1,1,1,0}
+        };
+
+        TraversableMatrix myMatrixGraph = new TraversableMatrix(new Matrix(myArray));
+        System.out.println(myMatrixGraph);
+        myMatrixGraph.setStartIndex(new Index(0,0));
+        ThreadLocalDFSVisit<Index> dfsVisit = new ThreadLocalDFSVisit<>();
+        List<Index> connectedComponent = dfsVisit.traverse(myMatrixGraph);
+        System.out.println(connectedComponent);
+
+        myMatrixGraph.setStartIndex(new Index(2,0));
+        dfsVisit = new ThreadLocalDFSVisit<>();
+        connectedComponent = dfsVisit.traverse(myMatrixGraph);
+        System.out.println(connectedComponent);
+
+    }*/
+
+}
 

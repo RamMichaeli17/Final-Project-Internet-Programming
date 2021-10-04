@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
  */
 public class TraversableMatrix implements Traversable<Index> {
     protected final Matrix matrix;
-    protected Index startIndex;
+    protected Index startIndex, endIndex;
 
     public TraversableMatrix(Matrix matrix) {
         this.matrix = matrix;
@@ -22,11 +22,37 @@ public class TraversableMatrix implements Traversable<Index> {
         this.startIndex = startIndex;
     }
 
+
+    public Index getEndIndex() {
+        return endIndex;
+    }
+
+    public void setEndIndex(Index endIndex) {
+        this.endIndex = endIndex;
+    }
+
+
+    @Override
+    public int getValue(Node<Index> someNode) {
+        return matrix.getValue(new Index(someNode.getData().row,someNode.getData().column));
+    }
+
+    @Override
+    public int getValueN(Index someNode) {
+        return this.matrix.getValue(someNode);
+    }
+
     @Override
     public Node<Index> getOrigin() throws NullPointerException{
         if (this.startIndex == null) throw new NullPointerException("start index is not initialized");
         return new Node<>(this.startIndex);
 
+    }
+
+    @Override
+    public Node<Index> getDestination() throws NullPointerException{
+        if (this.endIndex == null) throw new NullPointerException("end index is not initialized");
+        return new Node<>(this.endIndex);
     }
 
     /**
@@ -50,9 +76,34 @@ public class TraversableMatrix implements Traversable<Index> {
         return reachableIndices;
     }
 
+    // for task 4 - we need to find the min weight path between 2 indexes without diagonals
+    @Override
+    public Collection<Node<Index>> getReachableNodesWithoutDiagonal(Node<Index> someNode) {
+        List<Node<Index>> reachableIndex = new ArrayList<>();
+        for (Index index : this.matrix.getNeighborsWithoutDiagonal(someNode.getData())) {
+            Node<Index> indexNode = new Node<>(index, someNode);
+            reachableIndex.add(indexNode);
+        }
+        return reachableIndex;
+    }
+    @Override
+    public Collection<Node<Index>> getReachableWeight(Node<Index> someNode){
+        List<Node<Index>> reachableIndex = new ArrayList<>();
+        for(Index index : this.matrix.getNeighborsWithoutDiagonal(someNode.getData())){
+            Node<Index> indexNode = new Node<>(index, someNode);
+            reachableIndex.add(indexNode);
+        }
+        return reachableIndex;
+    }
+
 
     @Override
     public String toString() {
         return matrix.toString();
     }
+
+   public int getSize(){
+        return this.getSize();
+    }
+
 }

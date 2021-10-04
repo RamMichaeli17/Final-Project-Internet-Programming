@@ -115,6 +115,29 @@ public class Matrix {
         return list;
     }
 
+    //for task 4
+    public Collection<Index> getNeighborsWithoutDiagonal(final Index index) {
+        Collection<Index> list = new ArrayList<>();
+        int extracted = -1;
+        try{
+            extracted = primitiveMatrix[index.row+1][index.column];
+            list.add(new Index(index.row+1,index.column));
+        }catch (ArrayIndexOutOfBoundsException ignored){}
+        try{
+            extracted = primitiveMatrix[index.row][index.column+1];
+            list.add(new Index(index.row,index.column+1));
+        }catch (ArrayIndexOutOfBoundsException ignored){}
+        try{
+            extracted = primitiveMatrix[index.row-1][index.column];
+            list.add(new Index(index.row-1,index.column));
+        }catch (ArrayIndexOutOfBoundsException ignored){}
+        try{
+            extracted = primitiveMatrix[index.row][index.column-1];
+            list.add(new Index(index.row,index.column-1));
+        }catch (ArrayIndexOutOfBoundsException ignored){}
+        return list;
+    }
+
     public int getValue(final Index index){
         return primitiveMatrix[index.row][index.column];
     }
