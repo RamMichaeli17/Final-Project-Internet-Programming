@@ -70,7 +70,7 @@ public class ThreadLocalDFSVisit<T> {
      * @return List<T> - list of connected component(path).
      */
 
-    public List<T> traverse(Traversable<T> someGraph) {
+    public Set<T> traverse(Traversable<T> someGraph) {
         /*
         push origin to the Stack V
         while stack is not empty: V
@@ -94,7 +94,7 @@ public class ThreadLocalDFSVisit<T> {
                 }
             }
         }
-        List<T> connectedComponent = new ArrayList<>();
+        Set<T> connectedComponent = new HashSet<>();
         for (Node<T> node : threadLocalSet.get()) connectedComponent.add(node.getData());
 
 
@@ -106,7 +106,7 @@ public class ThreadLocalDFSVisit<T> {
         return connectedComponent;
         }
 
-   /* public static void main(String[] args) {
+    public static void main(String[] args) {
         int[][] myArray = {
                 {1,1,1,1,1},
                 {0,0,1,1,1},
@@ -119,7 +119,7 @@ public class ThreadLocalDFSVisit<T> {
         System.out.println(myMatrixGraph);
         myMatrixGraph.setStartIndex(new Index(0,0));
         ThreadLocalDFSVisit<Index> dfsVisit = new ThreadLocalDFSVisit<>();
-        List<Index> connectedComponent = dfsVisit.traverse(myMatrixGraph);
+        Set<Index> connectedComponent = dfsVisit.traverse(myMatrixGraph);
         System.out.println(connectedComponent);
 
         myMatrixGraph.setStartIndex(new Index(2,0));
@@ -127,7 +127,7 @@ public class ThreadLocalDFSVisit<T> {
         connectedComponent = dfsVisit.traverse(myMatrixGraph);
         System.out.println(connectedComponent);
 
-    }*/
+    }
 
 }
 

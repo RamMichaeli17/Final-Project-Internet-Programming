@@ -42,12 +42,7 @@ public interface Traversable<T> {
      *
      */
     public Node<T> getDestination();
-    /**
-     * This method give us the reachable nodes from current node without diagonals.
-     * @param someNode current node
-     * @return Collection<Node<T>>
-     */
-    public Collection<Node<T>> getReachableNodesWithoutDiagonal(Node<T> someNode);
+
 
     public Collection<Node<Index>> getReachableWeight(Node<T> someNode);
 

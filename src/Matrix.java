@@ -1,36 +1,19 @@
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Matrix {
     /**
-     * Neighboring Indices are up,down, left,right
+     * Neighboring Indices are up,down, left,right and cross
      *   1 0 0
      *   0 1 1
      *   0 0 0
      *   1 1 1
      *
-     * [[(0,0),
-     * [(1,1) ,(1,2)],
+     * [[(0,0),(1,1) ,(1,2)],
      * [(3,0),(3,1),(3,2)]]
      *
-     *
-     * 1 0 0
-     * 0 1 1
-     * 0 1 0
-     * 0 1 1
-     *
-     *
      */
-    /*
-    [1,0,0,1]
-    [1,1,0,1]
-    [1,1,1,0]
-
-    [1,0,1,1]
-    [1,1,0,1]
-    [1,1,1,0]
-     */
-
     int[][] primitiveMatrix;
 
     public Matrix(int[][] oArray){
@@ -68,12 +51,13 @@ public class Matrix {
     }
 
     /**
-     * getNeighbors function find all the indexes above, below ,besides and cross the specific index that equally to 1
-     * @param index type of Index
+     * getNeighbors() -this function finds all the indexes above, below ,besides and cross the specific index that equally to 1
+     * @param index type of Index, represents start index
      * @return list of all neighbors of specific index
-     * [1 0 1
-     *  0 1 0
-     *  1 0 1]
+     *
+     *  [ 1 0 1
+     *    0 1 0
+     *    1 0 1 ]
      */
     public Collection<Index> getNeighbors(final Index index){
         Collection<Index> list = new ArrayList<>();
@@ -95,28 +79,33 @@ public class Matrix {
             list.add(new Index(index.row,index.column-1));
         }catch (ArrayIndexOutOfBoundsException ignored){}
 
-        //diagonal - 4 cases :
+        //diagonals - 4 cases :
+
         try{
+            //up-right
             extracted = primitiveMatrix[index.row+1][index.column+1];
             list.add(new Index(index.row+1,index.column+1));
         }catch (ArrayIndexOutOfBoundsException ignored){}
         try{
+            //up-left
             extracted = primitiveMatrix[index.row-1][index.column-1];
             list.add(new Index(index.row-1,index.column-1));
         }catch (ArrayIndexOutOfBoundsException ignored){}
         try{
+            //down-left
             extracted = primitiveMatrix[index.row+1][index.column-1];
             list.add(new Index(index.row+1,index.column-1));
         }catch (ArrayIndexOutOfBoundsException ignored){}
         try{
+            //down-right
             extracted = primitiveMatrix[index.row-1][index.column+1];
             list.add(new Index(index.row-1,index.column+1));
         }catch (ArrayIndexOutOfBoundsException ignored){}
         return list;
     }
 
-    //for task 4
-    public Collection<Index> getNeighborsWithoutDiagonal(final Index index) {
+    //if we need to find neighbors without diagonals:
+   /* public Collection<Index> getNeighborsWithoutDiagonal(final Index index) {
         Collection<Index> list = new ArrayList<>();
         int extracted = -1;
         try{
@@ -136,6 +125,18 @@ public class Matrix {
             list.add(new Index(index.row,index.column-1));
         }catch (ArrayIndexOutOfBoundsException ignored){}
         return list;
+    }*/
+
+    /**
+     * getReachables() - this function finds all the neighbors of specific index that their value equals to 1
+     * @param index type of Index, represents start index
+     * @return
+     */
+    public Collection<Index> getReachables(Index index) {
+        ArrayList<Index> filteredIndices = new ArrayList<>();
+        this.getNeighbors(index).stream().filter(i-> getValue(i)==1)
+                .map(neighbor->filteredIndices.add(neighbor)).collect(Collectors.toList());
+        return filteredIndices;
     }
 
     public int getValue(final Index index){
@@ -153,5 +154,35 @@ public class Matrix {
         return primitiveMatrix;
     }
 
+    /**
+     * this method run on 'this' which represents matrix
+     *
+     * @return list of all the indexes with value = '1'
+     */
+    public List<Index> findAllOnes() {
+        List<Index> listAllOnes= new ArrayList<>();
+        //we convert the matrix to list, and filtered each index in the list-
+        //if the value==1 then we can map it to our returned list
+        //the mapping is done into listAllOnes
+        this.matrixToList(this.primitiveMatrix).stream().filter(i-> getValue(i)==1)
+                .map(listAllOnes::add).collect(Collectors.toList());
+        return listAllOnes;
+    }
 
+    /**
+     * convert 2D array to List
+     * we use this method in findAllOnes
+     * @param primitiveMatrix
+     * @return
+     */
+    private List<Index> matrixToList(int[][] primitiveMatrix) {
+        ArrayList<Index> asList= new ArrayList<>();
+        //We will go over each index in the matrix and wrap it with Index
+        //We will add each one to our list
+        for(int i=0; i<primitiveMatrix.length;i++){
+            for(int j=0; j<primitiveMatrix[i].length;j++)
+                asList.add(new Index(i,j));
+        }
+        return asList;
+    }
 }

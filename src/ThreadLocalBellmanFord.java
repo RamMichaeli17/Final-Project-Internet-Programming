@@ -48,7 +48,7 @@ public class ThreadLocalBellmanFord <T> implements Serializable {
             if (last.equals(dst)) {
                 listPaths.add(path);
             }
-            Collection<Node<T>> neighborsIndices = someGraph.getReachableNodesWithoutDiagonal(last);
+            Collection<Node<T>> neighborsIndices = someGraph.getReachableNodes(last);
             for (Node<T> neighbor : neighborsIndices) {
                 if (isNotVisited(neighbor, path)) {
                     List<Node<T>> newpath = new ArrayList<>(path);
@@ -177,7 +177,7 @@ public class ThreadLocalBellmanFord <T> implements Serializable {
 
 
 
-     public static void main(String[] args) {
+    /* public static void main(String[] args) {
 
         int[][] myArray = {
                 {100, 100, 100},
@@ -194,7 +194,7 @@ public class ThreadLocalBellmanFord <T> implements Serializable {
         LinkedList<List<Node<Index>>> minPathsBellmanFord= bellmanFord.findPathsBellmanFord(someGraph,src,dest);
         System.out.println(minPathsBellmanFord);
 
-     }
+     }*/
 
 
 }

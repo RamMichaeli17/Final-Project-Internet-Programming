@@ -23,6 +23,7 @@ public class TraversableMatrix implements Traversable<Index> {
     }
 
 
+    //right now we don`t need this, maybe we can delete it
     public Index getEndIndex() {
         return endIndex;
     }
@@ -76,20 +77,10 @@ public class TraversableMatrix implements Traversable<Index> {
         return reachableIndices;
     }
 
-    // for task 4 - we need to find the min weight path between 2 indexes without diagonals
-    @Override
-    public Collection<Node<Index>> getReachableNodesWithoutDiagonal(Node<Index> someNode) {
-        List<Node<Index>> reachableIndex = new ArrayList<>();
-        for (Index index : this.matrix.getNeighborsWithoutDiagonal(someNode.getData())) {
-            Node<Index> indexNode = new Node<>(index, someNode);
-            reachableIndex.add(indexNode);
-        }
-        return reachableIndex;
-    }
     @Override
     public Collection<Node<Index>> getReachableWeight(Node<Index> someNode){
         List<Node<Index>> reachableIndex = new ArrayList<>();
-        for(Index index : this.matrix.getNeighborsWithoutDiagonal(someNode.getData())){
+        for(Index index : this.matrix.getNeighbors(someNode.getData())){
             Node<Index> indexNode = new Node<>(index, someNode);
             reachableIndex.add(indexNode);
         }

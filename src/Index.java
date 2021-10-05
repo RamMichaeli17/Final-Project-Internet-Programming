@@ -1,7 +1,9 @@
+import java.io.Serializable;
+
 /**
  * Represents a location in a Matrix based on row and column
  */
-public class Index {
+public class Index implements Serializable {
     int row, column;
 
     public Index(int row, int column){
