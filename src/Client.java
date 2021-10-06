@@ -78,7 +78,7 @@ import java.util.stream.Collectors;
                         //listOfSCCs - holds hashSet of hashSet (each hashSet is connected component)
                         //server transfers data to client.
                         HashSet<HashSet<Index>> listOfSCCs =
-                                new HashSet<>((HashSet<HashSet<Index>>) fromServer.readObject());
+                                new HashSet<>((List<HashSet<Index>>) fromServer.readObject());
 
                          /* A hashSet is unsorted Collection. In java 8 we can do like this:
                            fooHashSet.stream()
@@ -89,7 +89,7 @@ import java.util.stream.Collectors;
                         //sort listOfSCCs
                         List<HashSet<Index>> list = listOfSCCs.stream().sorted(Comparator.comparingInt(HashSet::size))
                                 .collect(Collectors.toList());
-                        System.out.println("from server: Reachable Indecies are - " + list);
+                        System.out.println("from server: Connected Components are- " + list);
                         System.out.println("from client: task1 is finished");
                         scanner.nextLine();
                         break;

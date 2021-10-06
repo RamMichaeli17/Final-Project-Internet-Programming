@@ -112,7 +112,7 @@ public class MatrixIHandler implements IHandler {
                     listOFHashsets=findSCCs(primitiveMatrix);
                     //transfers to client the answer
                     objectOutputStream.writeObject(listOFHashsets);
-                    System.out.println("from server: Reachable Indecies are - " + listOFHashsets);
+                   // System.out.println("from server: Reachable Indecies are - " + listOFHashsets);
                     System.out.println("Task1 finish");
                     break;
                 }
@@ -136,7 +136,6 @@ public class MatrixIHandler implements IHandler {
                     System.out.println("start" + traversable2.getOrigin() + "end " + traversable2.getDestination());
                     //TODO: create an object of BFS class and call it function
 
-                    System.out.println("Task2 finish");
                     System.out.println("Task2 finish");
                     break;
                 }
