@@ -1,23 +1,24 @@
 import java.util.*;
 
 public class ThreadLocalBFS<T> {
-    final ThreadLocal<LinkedList<Node<T>>> threadLocalQueue = ThreadLocal.withInitial(() -> new LinkedList<Node<T>>());
+    final ThreadLocal<LinkedList<List<Node<T>>>> threadLocalQueue = ThreadLocal.withInitial(() -> new LinkedList<Node<T>>());
     final ThreadLocal<Set<Node<T>>> threadLocalVisited = ThreadLocal.withInitial(() -> new LinkedHashSet<Node<T>>());
 
     public List<List<T>> BFS (Traversable<T> someGraph, Node<T> src, Node<T> dest) {
-        int counter=Integer.MAX_VALUE;
-        List<List<T>> Paths = new ArrayList<>();
-        ArrayList<T> path = new ArrayList<>();
+        int sizeOfMinPath=Integer.MAX_VALUE;
+        List<List<T>> minPaths = new ArrayList<>();
+        ArrayList<Node<T>> path = new ArrayList<>();
         threadLocalVisited.get().add(src);
-        threadLocalQueue.get().add(src);
+        path.add(src);
+        threadLocalQueue.get().add(path);
         while(!threadLocalQueue.get().isEmpty()) {
-            Node<T> polled = threadLocalQueue.get().poll();
-            path.add(polled.getData());
+            path = (ArrayList<Node<T>>) threadLocalQueue.get().poll();
+            Node<T> polled = path.get(path.size()-1);
             if(polled.equals(dest))
-                if(counter<path.size())
+                if(sizeOfMinPath<path.size())
                     break;
                 else {
-                    counter = path.size();
+                    sizeOfMinPath = path.size();
                     minPaths.add(path);
                 }
             Collection<Node<T>> reachableNodes = someGraph.getReachableNodes(polled);
@@ -27,6 +28,7 @@ public class ThreadLocalBFS<T> {
                     threadLocalQueue.get().add(singleReachableNode);
                     ArrayList<T> newPath = new ArrayList<>(path);
                     newPath.add(singleReachableNode.getData());
+                    Paths.add(newPath);
                 }
 
             }
