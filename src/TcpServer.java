@@ -72,7 +72,7 @@ public class TcpServer {
                             // close all streams
                             serverClientConnection.getInputStream().close();
                             serverClientConnection.getOutputStream().close();
-                            serverClientConnection.close();
+                            serverClientConnection.close(); //
                         } catch (IOException | ClassNotFoundException ioException) {
                             ioException.printStackTrace();
                         }

@@ -1,8 +1,9 @@
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Matrix {
+public class Matrix implements Serializable {
     /**
      * Neighboring Indices are up,down, left,right and cross
      *   1 0 0

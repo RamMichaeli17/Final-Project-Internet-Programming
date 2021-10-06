@@ -78,6 +78,18 @@ public class TraversableMatrix implements Traversable<Index> {
     }
 
     @Override
+    public Collection<Node<Index>> getNeighbors(Node<Index> someNode) {
+        List<Node<Index>> NeighborIndex = new ArrayList<>();
+        for (Index index : this.matrix.getNeighbors(someNode.getData())) {
+            Node<Index> indexNode = new Node<>(index, someNode);
+            NeighborIndex.add(indexNode);
+        }
+
+        return NeighborIndex;
+    }
+
+
+    @Override
     public Collection<Node<Index>> getReachableWeight(Node<Index> someNode){
         List<Node<Index>> reachableIndex = new ArrayList<>();
         for(Index index : this.matrix.getNeighbors(someNode.getData())){

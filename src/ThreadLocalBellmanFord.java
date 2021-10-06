@@ -48,7 +48,7 @@ public class ThreadLocalBellmanFord <T> implements Serializable {
             if (last.equals(dst)) {
                 listPaths.add(path);
             }
-            Collection<Node<T>> neighborsIndices = someGraph.getReachableNodes(last);
+            Collection<Node<T>> neighborsIndices = someGraph.getNeighbors(last);
             for (Node<T> neighbor : neighborsIndices) {
                 if (isNotVisited(neighbor, path)) {
                     List<Node<T>> newpath = new ArrayList<>(path);
@@ -70,19 +70,19 @@ public class ThreadLocalBellmanFord <T> implements Serializable {
      */
     public boolean isNotVisited(Node<T> n, List<Node<T>> path) {
      //decide which one is better
-      /*  for (Node<T> v : path)
+        for (Node<T> node : path)
             if (path.contains(n))
                 return false;
 
-        return true;*/
+        return true;
 
         //geeks4geeks
-          int size = path.size();
+        /* int size = path.size();
               for(int i = 0; i < size; i++)
                  if (path.get(i) == n)
                     return false;
 
-              return true;
+              return true;*/
     }
 
     /**
@@ -125,6 +125,7 @@ public class ThreadLocalBellmanFord <T> implements Serializable {
         LinkedList<List<Node<T>>> listMinTotalWeight = new LinkedList<>();
         LinkedList<List<Node<T>>> listMinTotalWeightfurure = new LinkedList<>();
         for (List<Node<T>> list : listPaths) {
+            //callable returns value
             Callable<List<Node<T>>> callable = () -> {
                 readWriteLock.writeLock().lock();
                 sumPath.set(SumPathWeight(someGraph, list));
@@ -174,28 +175,6 @@ public class ThreadLocalBellmanFord <T> implements Serializable {
         this.threadPoolExecutor.shutdown();
         return listMinTotalWeight;
     }
-
-
-
-    /* public static void main(String[] args) {
-
-        int[][] myArray = {
-                {100, 100, 100},
-                {500, 900, 300}
-        };
-        Traversable someGraph= new TraversableMatrix(new Matrix(myArray));
-
-        ThreadLocalBellmanFord <Index> bellmanFord = new ThreadLocalBellmanFord<>();
-      //  Index start=new Index(0,1);
-      //  Index end = new Index(1,2);
-        Node<Index> src= new Node(new Index(0,0));
-        Node<Index> dest =new Node(new Index(1,2));
-
-        LinkedList<List<Node<Index>>> minPathsBellmanFord= bellmanFord.findPathsBellmanFord(someGraph,src,dest);
-        System.out.println(minPathsBellmanFord);
-
-     }*/
-
 
 }
 

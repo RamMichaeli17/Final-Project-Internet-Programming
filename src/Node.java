@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -6,7 +7,7 @@ import java.util.Objects;
  * @param <T>
  *
  */
-public class Node<T> {
+public class Node<T> implements Serializable {
     private T data;
     private Node<T> parent;
 

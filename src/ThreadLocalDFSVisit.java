@@ -106,28 +106,7 @@ public class ThreadLocalDFSVisit<T> {
         return connectedComponent;
         }
 
-    public static void main(String[] args) {
-        int[][] myArray = {
-                {1,1,1,1,1},
-                {0,0,1,1,1},
-                {0,0,0,0,0},
-                {0,1,0,1,0},
-                {0,1,1,1,0}
-        };
 
-        TraversableMatrix myMatrixGraph = new TraversableMatrix(new Matrix(myArray));
-        System.out.println(myMatrixGraph);
-        myMatrixGraph.setStartIndex(new Index(0,0));
-        ThreadLocalDFSVisit<Index> dfsVisit = new ThreadLocalDFSVisit<>();
-        Set<Index> connectedComponent = dfsVisit.traverse(myMatrixGraph);
-        System.out.println(connectedComponent);
-
-        myMatrixGraph.setStartIndex(new Index(2,0));
-        dfsVisit = new ThreadLocalDFSVisit<>();
-        connectedComponent = dfsVisit.traverse(myMatrixGraph);
-        System.out.println(connectedComponent);
-
-    }
 
 }
 

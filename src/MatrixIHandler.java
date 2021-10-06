@@ -28,15 +28,15 @@ public class MatrixIHandler implements IHandler {
         TraversableMatrix myTraversableM = new TraversableMatrix(sourceMatrix);
         listOne = sourceMatrix.findAllOnes();
         System.out.println(listOne);
-
         //set the first index
         myTraversableM.setStartIndex(myTraversableM.getStartIndex());
         ThreadLocalDFSVisit<Index> algo = new ThreadLocalDFSVisit<>();
 
         //call to parallelDFSTraverse method
-        listOFHashsets = algo.parallelDFSTraverse(myTraversableM, listOne); //the problematic line
+        listOFHashsets = algo.parallelDFSTraverse(myTraversableM, listOne);
         List<HashSet<Index>> list = listOFHashsets.stream().sorted(Comparator.comparingInt(HashSet::size))
                 .collect(Collectors.toList());
+
         return list;
 
     }
@@ -106,17 +106,18 @@ public class MatrixIHandler implements IHandler {
                 case "1":{ //dfs
                     //we convert 2D array to primitive matrix
                     int[][] primitiveMatrix = (int[][])objectInputStream.readObject();
-                    System.out.println("Server: Got 2d array from client");
-                    List<HashSet<Index>> listOFHashsets;
+
+                    System.out.println("Task1 is running...\nServer: Got 2d array from client");
+                    List<HashSet<Index>> listOFSCCs;
                     //calling method will find the SCCs
-                    listOFHashsets=findSCCs(primitiveMatrix);
+
+                    listOFSCCs=findSCCs(primitiveMatrix);
                     //transfers to client the answer
-                    objectOutputStream.writeObject(listOFHashsets);
-                   // System.out.println("from server: Reachable Indecies are - " + listOFHashsets);
-                    System.out.println("Task1 finish");
+                    objectOutputStream.writeObject(listOFSCCs);
+                    System.out.println("Task1 finish\n");
                     break;
                 }
-                case "2": { //bfs
+              /*  case "2": { //bfs
                     int[][] primitiveMatrix = (int[][]) objectInputStream.readObject();
                     System.out.println("Server: Got 2d array from client");
                     this.matrix=new Matrix(primitiveMatrix);
@@ -146,7 +147,7 @@ public class MatrixIHandler implements IHandler {
 
                     System.out.println("Task3 finish");
                   break;
-                }
+                }*/
                 case "4":{ //the lightest paths with bfs / bellmanFord
                     int[][] primitiveMatrix = (int[][])objectInputStream.readObject();
                     Index src, dest;
@@ -168,7 +169,7 @@ public class MatrixIHandler implements IHandler {
                     minWeightList = bellmanFord.findPathsBellmanFord(traversable4, traversable4.getOrigin(), traversable4.getDestination());
                     System.out.println(minWeightList);
                     objectOutputStream.writeObject(minWeightList);
-                    System.out.println("Task4 finish");
+                    System.out.println("Task4 finish\n");
                     break;
                 }
 
