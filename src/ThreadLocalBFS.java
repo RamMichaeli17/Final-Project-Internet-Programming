@@ -25,15 +25,11 @@ public class ThreadLocalBFS<T> {
             for (Node<T> singleReachableNode : reachableNodes) {
                 if(!threadLocalVisited.get().contains(singleReachableNode)){
                     threadLocalVisited.get().add(singleReachableNode);
-                    threadLocalQueue.get().add(singleReachableNode);
-                    ArrayList<T> newPath = new ArrayList<>(path);
-                    newPath.add(singleReachableNode.getData());
-                    Paths.add(newPath);
+                    ArrayList<Node<T>> newPath = new ArrayList<>(path);
+                    newPath.add(singleReachableNode);
+                    threadLocalQueue.get().add(newPath);
                 }
-
             }
-
-
         }
         return minPaths;
 
