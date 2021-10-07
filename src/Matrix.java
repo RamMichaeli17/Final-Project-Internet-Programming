@@ -1,15 +1,20 @@
-
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * This class represents a Matrix Entity and functions that use primitiveMatrix
+ */
+
 public class Matrix implements Serializable {
+    //Classes that do not implement Serializable interface will not have any of their state serialized or deserialized.
+
     /**
-     * Neighboring Indices are up,down, left,right and cross
-     *   1 0 0
+     * Neighboring Indices are up,down, left,right and diagonals
+     *   1 1 0
      *   0 1 1
-     *   0 0 0
-     *   1 1 1
+     *   1 0 0
+     *
      *
      * [[(0,0),(1,1) ,(1,2)],
      * [(3,0),(3,1),(3,2)]]
@@ -17,6 +22,7 @@ public class Matrix implements Serializable {
      */
     int[][] primitiveMatrix;
 
+    //constructor
     public Matrix(int[][] oArray){
         List<int[]> list = new ArrayList<>();
         for (int[] row : oArray) {
@@ -26,7 +32,7 @@ public class Matrix implements Serializable {
         primitiveMatrix = list.toArray(new int[0][]);
     }
 
-    public Matrix() {
+    /*public Matrix() {
         Random r = new Random();
         primitiveMatrix = new int[5][5];
         for (int i = 0; i < primitiveMatrix.length; i++) {
@@ -39,7 +45,7 @@ public class Matrix implements Serializable {
             System.out.println(s);
         }
         System.out.println("\n");
-    }
+    }*/
 
     @Override
     public String toString(){
@@ -52,9 +58,9 @@ public class Matrix implements Serializable {
     }
 
     /**
-     * getNeighbors() -this function finds all the indexes above, below ,besides and cross the specific index that equally to 1
+     * getNeighbors() -this function finds all the indexes above, below ,on the sides and diagonally to specific index that equally to 1
      * @param index type of Index, represents start index
-     * @return list of all neighbors of specific index
+     * @return list (Collection) of all neighbors of specific index
      *
      *  [ 1 0 1
      *    0 1 0
@@ -63,19 +69,19 @@ public class Matrix implements Serializable {
     public Collection<Index> getNeighbors(final Index index){
         Collection<Index> list = new ArrayList<>();
         int extracted = -1;
-        try{
+        try{ //below
             extracted = primitiveMatrix[index.row+1][index.column];
             list.add(new Index(index.row+1,index.column));
         }catch (ArrayIndexOutOfBoundsException ignored){}
-        try{
+        try{ //right
             extracted = primitiveMatrix[index.row][index.column+1];
             list.add(new Index(index.row,index.column+1));
         }catch (ArrayIndexOutOfBoundsException ignored){}
-        try{
+        try{ //above
             extracted = primitiveMatrix[index.row-1][index.column];
             list.add(new Index(index.row-1,index.column));
         }catch (ArrayIndexOutOfBoundsException ignored){}
-        try{
+        try{ //left
             extracted = primitiveMatrix[index.row][index.column-1];
             list.add(new Index(index.row,index.column-1));
         }catch (ArrayIndexOutOfBoundsException ignored){}
@@ -129,7 +135,7 @@ public class Matrix implements Serializable {
     }*/
 
     /**
-     * getReachables() - this function finds all the neighbors of specific index that their value equals to 1
+     * getReachable() - this function finds all the neighbors of specific index that their value equals to 1
      * @param index type of Index, represents start index
      * @return
      */
@@ -155,9 +161,10 @@ public class Matrix implements Serializable {
         return primitiveMatrix;
     }
 
+
     /**
      * this method run on 'this' which represents matrix
-     *
+     * use primitiveMatrix
      * @return list of all the indexes with value = '1'
      */
     public List<Index> findAllOnes() {
@@ -173,8 +180,8 @@ public class Matrix implements Serializable {
     /**
      * convert 2D array to List
      * we use this method in findAllOnes
-     * @param primitiveMatrix
-     * @return
+     * @param primitiveMatrix type of matrix
+     * @return list of indexes (?)
      */
     private List<Index> matrixToList(int[][] primitiveMatrix) {
         ArrayList<Index> asList= new ArrayList<>();

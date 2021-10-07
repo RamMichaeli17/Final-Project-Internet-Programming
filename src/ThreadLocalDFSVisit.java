@@ -2,15 +2,18 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
- * When we need to make sure that every thread has its own local data structures  - synchronization is not the solution.
- * TLS- Thread Local Storage
+ * This class represents a Thread-safe DFS algorithm.
+ *
+ *  When we need to make sure that every thread has its own local data structures  - synchronization is not the solution.
+ *  using TLS- Thread Local Storage, each thread has his own storage
  */
 public class ThreadLocalDFSVisit<T> {
-    // ForkJoinPool
-    // SparkRDD
 
-    final ThreadLocal<Stack<Node<T>>> threadLocalStack = ThreadLocal.withInitial(() -> new Stack<Node<T>>()); // lambda expression
-    //    final ThreadLocal<Stack<Node<T>>> threadLocalStack2 = ThreadLocal.withInitial(Stack::new); // method reference
+    //lambda expression
+    final ThreadLocal<Stack<Node<T>>> threadLocalStack = ThreadLocal.withInitial(() -> new Stack<Node<T>>());
+
+    // method reference
+    //    final ThreadLocal<Stack<Node<T>>> threadLocalStack2 = ThreadLocal.withInitial(Stack::new);
     final ThreadLocal<Set<Node<T>>> threadLocalSet = ThreadLocal.withInitial(LinkedHashSet::new);
 
     public ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(5,
@@ -18,14 +21,13 @@ public class ThreadLocalDFSVisit<T> {
     protected ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock(); //using lock in callable
 
     /**
-     * submit is a function that return value.
-     * reminder -callable returns value.
+     * parallelDFSVisitTraverse function finds SCC parallely.
+     * why hashSet? HashSet is a collection of items where every item is unique - we doesn't want multiplication
+     *
+     * submit is a function that return value, due to we're using Callable.
      *
      * Future represents the result of an asynchronous computation. When the asynchronous task is created,a Java Future object is returned.
      * This Future object functions as a handle to the result of the asynchronous task
-     *
-     * parallelDFSVisitTraverse is function that find SCC parallely.
-     * why hashSet? HashSet is a collection of items where every item is unique - we doesn't want multiplication
      *
      * @param SomeGraph represent current Graph (we relate matrix as graph)
      * @param listOfIndex represent indexes to run on them
@@ -53,7 +55,8 @@ public class ThreadLocalDFSVisit<T> {
         }
         for (Future<HashSet<T>> futureScc : futureListOfScc) {
                 try {
-                    //get() is a blocking call, its the 'input' of the callable
+                    //Future.get() is a blocking call-
+                    //it will block until results of computation are available, or the computation was interrupted (cancelled or resulting in exception).
                     listIndexScc.add(futureScc.get());
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
@@ -64,7 +67,7 @@ public class ThreadLocalDFSVisit<T> {
     }
 
     /**
-     * traverse: The function execute DFS method by ThreadLocal
+     * traverse -this function execute DFS method by ThreadLocal
      * @param someGraph represent current Graph (we relating matrix as graph)
      *
      * @return List<T> - list of connected component(path).
@@ -97,12 +100,10 @@ public class ThreadLocalDFSVisit<T> {
         Set<T> connectedComponent = new HashSet<>();
         for (Node<T> node : threadLocalSet.get()) connectedComponent.add(node.getData());
 
-
         //A scan cycle does not mean that the copy of the data structure has been deleted, so it is necessary to delete the data in the copy
         //Old data is saved in that specific thread's copy of the data stracture- we ought to clear between traversals using the same threads.
         threadLocalStack.get().clear(); //there is no reason to clear the stack other than readability
         threadLocalSet.get().clear();
-
         return connectedComponent;
         }
 

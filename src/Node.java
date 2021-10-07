@@ -3,11 +3,10 @@ import java.util.Objects;
 
 /**
  * This class wraps a concrete object and supplies getters and setters
- *
  * @param <T>
- *
  */
 public class Node<T> implements Serializable {
+    //Classes that do not implement Serializable interface will not have any of their state serialized or deserialized.
     private T data;
     private Node<T> parent;
 
@@ -48,12 +47,19 @@ Set<Node<T>> finished - this will work only if concrete object are different
 Node<Index> Node<Coordinate> Node<ComputerLocation>
 Node<Index> Node<Index> Node<Index>
  */
+    //equals objects have the same hashcode
+    //This method returns the hashcode of the current object, which is equal to the primitive int value.
     @Override
     public int hashCode() {
         return data != null ? data.hashCode():0;
     }
 
 
+    /**
+     * The function compares between objects (between all their data members) and returns boolean value
+     * @param o Object represent the object we compare to
+     * @return boolean answer
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
