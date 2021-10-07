@@ -20,7 +20,7 @@ public interface Traversable<T> {
 
 
     //what I have modified to the code
-
+    public Collection<Node<T>>  getNeighbors(Node<T> someNode);
     /**
      * This method
      * @param index

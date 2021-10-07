@@ -4,8 +4,10 @@ import java.io.Serializable;
  * Represents a location in a Matrix based on row and column
  */
 public class Index implements Serializable {
+    //Classes that do not implement Serializable interface will not have any of their state serialized or deserialized.
     int row, column;
 
+    //constructor
     public Index(int row, int column){
         if(row < 0 || column < 0)
             throw new IllegalArgumentException("row/column cannot be negative");
@@ -13,14 +15,14 @@ public class Index implements Serializable {
         this.column = column;
     }
 
-    public int getRow() {
-        return row;
-    }
+    public int getRow() {  return row;  }
 
-    public int getColumn() {
-        return column;
-    }
-
+    public int getColumn() {return column;}
+    /**
+     * The function compares between objects (between all their data members) and returns boolean value
+     * @param o Object represent the object we compare to
+     * @return boolean answer
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -30,7 +32,8 @@ public class Index implements Serializable {
         if (row != index.row) return false;
         return column == index.column;
     }
-
+    //equals objects have the same hashcode
+    //This method returns the hashcode of the current object, which is equal to the primitive int value.
     @Override
     public int hashCode() {
         int result = row;
@@ -43,23 +46,4 @@ public class Index implements Serializable {
         return "(" + row + "," + column + ")";
     }
 
-
-    public static void main(String[] args) {
-        Index index = new Index(1,1);
-        String name = "Yossi";
-        System.out.println(index.equals(index));
-        System.out.println(index.equals(name));
-        System.out.println(index);
-
-        int[] numArray = new int[]
-                {20,15,963};
-        System.out.println(numArray);
-
-        int[][] twoDimensionalArray = new int[][]
-                {
-                        {1,2,3},
-                        {4,5,6},
-                        {7,8,9}
-                };
-    }
 }

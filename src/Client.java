@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 
         public static void main(String[] args) throws IOException, ClassNotFoundException ,ClassCastException{
 
-           Scanner scanner = new Scanner(System.in); //for the client inputs
+            Scanner scanner = new Scanner(System.in); //for the client inputs
             Socket socket =new Socket("127.0.0.1",8010);
             System.out.println("client: Created Socket");
 
@@ -87,10 +87,10 @@ import java.util.stream.Collectors;
                         */
 
                         //sort listOfSCCs
-                        List<HashSet<Index>> list = listOfSCCs.stream().sorted(Comparator.comparingInt(HashSet::size))
+                       List<HashSet<Index>> list = listOfSCCs.stream().sorted(Comparator.comparingInt(HashSet::size))
                                 .collect(Collectors.toList());
                         System.out.println("from server: Connected Components are- " + list);
-                        System.out.println("from client: task1 is finished");
+                        System.out.println("from client: task1 is finished\n");
                         scanner.nextLine();
                         break;
                     }
@@ -118,10 +118,12 @@ import java.util.stream.Collectors;
                         toServer.writeObject(startIndex);
                         Index endIndex= indexRequest(matrix); //input
                         toServer.writeObject(endIndex);
+
                         LinkedList<List<Index>> minWeightList = new LinkedList<>((LinkedList<List<Index>>) fromServer.readObject());
                         System.out.println("from Server - The easiest routes are: " + minWeightList);
                         toServer.writeObject(minWeightList);
                         System.out.println("from client: Task4 finish");
+                        scanner.nextLine();
                         break;
                     }
                     case "stop": {
