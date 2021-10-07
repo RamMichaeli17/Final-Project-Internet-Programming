@@ -1,14 +1,12 @@
 import java.util.*;
 
 public class ThreadLocalBFS<T> {
-    final ThreadLocal<LinkedList<List<Node<T>>>> threadLocalQueue = ThreadLocal.withInitial(() -> new LinkedList<Node<T>>());
-    final ThreadLocal<Set<Node<T>>> threadLocalVisited = ThreadLocal.withInitial(() -> new LinkedHashSet<Node<T>>());
+    final ThreadLocal<LinkedList<List<Node<T>>>> threadLocalQueue = ThreadLocal.withInitial(() -> new LinkedList<List<Node<T>>>());
 
-    public List<List<T>> BFS (Traversable<T> someGraph, Node<T> src, Node<T> dest) {
+    public List<List<Node<T>>> BFS (Traversable<T> someGraph, Node<T> src, Node<T> dest) {
         int sizeOfMinPath=Integer.MAX_VALUE;
-        List<List<T>> minPaths = new ArrayList<>();
+        List<List<Node<T>>> minPaths = new ArrayList<>();
         ArrayList<Node<T>> path = new ArrayList<>();
-        threadLocalVisited.get().add(src);
         path.add(src);
         threadLocalQueue.get().add(path);
         while(!threadLocalQueue.get().isEmpty()) {
@@ -23,15 +21,34 @@ public class ThreadLocalBFS<T> {
                 }
             Collection<Node<T>> reachableNodes = someGraph.getReachableNodes(polled);
             for (Node<T> singleReachableNode : reachableNodes) {
-                if(!threadLocalVisited.get().contains(singleReachableNode)){
-                    threadLocalVisited.get().add(singleReachableNode);
+                if(!path.contains(singleReachableNode)){
                     ArrayList<Node<T>> newPath = new ArrayList<>(path);
                     newPath.add(singleReachableNode);
                     threadLocalQueue.get().add(newPath);
                 }
             }
         }
+        if (minPaths.isEmpty())
+            System.out.println("No path exist between the source "+src+" and the destination "+dest);
         return minPaths;
+
+    }
+
+    public static void main(String[] args) {
+        int[][] myArray = {
+                {1,1,1,1,0},
+                {1,1,1,0,0},
+                {1,1,1,0,0},
+                {0,0,1,0,0}
+        };
+
+        TraversableMatrix myMatrixGraph = new TraversableMatrix(new Matrix(myArray));
+        System.out.println(myMatrixGraph);
+        myMatrixGraph.setStartIndex(new Index(0,0));
+        ThreadLocalBFS<Index> threadLocalBFS = new ThreadLocalBFS<>();
+        Node<Index> src = new Node (new Index(0,0));
+        Node<Index> dest = new Node (new Index(3,2));
+        System.out.println(threadLocalBFS.BFS(myMatrixGraph,src,dest));
 
     }
 
