@@ -114,7 +114,7 @@ public class ThreadLocalDFSVisit<T> {
      * @param primitiveMatrix type: int[][]
      * @return int
      */
-    public int submarine(HashSet<HashSet<Index>> hashSetList, int[][] primitiveMatrix) {
+    public int submarine(List<HashSet<Index>> hashSetList, int[][] primitiveMatrix) {
         int count = hashSetList.size(), minRow = 10000, minCol = 10000, maxRow = -1, maxCol = -1;
         int flag1 = 0;
         for (HashSet<Index> s : hashSetList) {

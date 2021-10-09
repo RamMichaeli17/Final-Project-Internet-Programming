@@ -143,9 +143,9 @@ public class MatrixIHandler implements IHandler {
                 case "3":{ //submarines
 
                     int[][] tempArray = (int[][]) objectInputStream.readObject();
-                    HashSet<HashSet<Index>> listOFHashsets;
-                    listOFHashsets=listTask1(tempArray);
-                    ThreadLocalDfsVisit<Index> algo2 = new ThreadLocalDfsVisit<>();
+                    List<HashSet<Index>> listOFHashsets;
+                    listOFHashsets=findSCCs(tempArray);
+                    ThreadLocalDFSVisit<Index> algo2 = new ThreadLocalDFSVisit<>();
                     int size = algo2.submarine(listOFHashsets, tempArray);
                     objectOutputStream.writeObject(size);
                     System.out.println("Task3 finish");
