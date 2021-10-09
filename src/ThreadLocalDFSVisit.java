@@ -107,6 +107,57 @@ public class ThreadLocalDFSVisit<T> {
         return connectedComponent;
         }
 
+    /**
+     * submarine: the function count number of valid submarines
+     *
+     * @param hashSetList type: HashSet<HashSet<Index>>
+     * @param primitiveMatrix type: int[][]
+     * @return int
+     */
+    public int submarine(HashSet<HashSet<Index>> hashSetList, int[][] primitiveMatrix) {
+        int count = hashSetList.size(), minRow = 10000, minCol = 10000, maxRow = -1, maxCol = -1;
+        int flag1 = 0;
+        for (HashSet<Index> s : hashSetList) {
+            for (Index index : s) {
+
+                if (s.size() == 1) {
+                    flag1 = 1;
+                }
+                if (flag1 == 1)
+                    count--;
+                flag1 = 0;
+                if (index.row <= minRow)
+                    minRow = index.row;
+                if (index.column <= minCol)
+                    minCol = index.column;
+                if (index.row > maxRow)
+                    maxRow = index.row;
+                if (index.column > maxCol)
+                    maxCol = index.column;
+            }
+
+            for (int i = minRow; i <= maxRow; i++) {
+                for (int j = minCol; j <= maxCol; j++) {
+                    if (primitiveMatrix[i][j] == 0) {
+                        flag1 = 1;
+                    }
+
+                }
+
+            }
+            if (flag1 == 1)
+                count--;
+            flag1 = 0;
+            minRow = 10000;
+            minCol = 10000;
+            maxRow = -1;
+            maxCol = -1;
+        }
+        if (count < 0)
+            count = 0;
+        return count;
+    }
+
 
 
 }

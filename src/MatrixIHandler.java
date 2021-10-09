@@ -139,15 +139,26 @@ public class MatrixIHandler implements IHandler {
 
                     System.out.println("Task2 finish");
                     break;
-                }
-                case "3":{ //submarines
-                    int[][] primitiveMatrix = (int[][]) objectInputStream.readObject();
-                    System.out.println("Server: Got 2d array from client");
-                    //TODO: pull task 3 ,create an object of it class and call it function
-
-                    System.out.println("Task3 finish");
-                  break;
                 }*/
+                case "3":{ //submarines
+
+                    int[][] tempArray = (int[][]) objectInputStream.readObject();
+                    HashSet<HashSet<Index>> listOFHashsets;
+                    listOFHashsets=listTask1(tempArray);
+                    ThreadLocalDfsVisit<Index> algo2 = new ThreadLocalDfsVisit<>();
+                    int size = algo2.submarine(listOFHashsets, tempArray);
+                    objectOutputStream.writeObject(size);
+                    System.out.println("Task3 finish");
+                    break;
+//                    int[][] primitiveMatrix = (int[][]) objectInputStream.readObject();
+//                    System.out.println("Server: Got 2d array from client");
+//                    //TODO: pull task 3 ,create an object of it class and call it function
+//
+//                    System.out.println("Task3 finish");
+//                  break;
+                }
+
+
                 case "4":{ //the lightest paths with bfs / bellmanFord
                     int[][] primitiveMatrix = (int[][])objectInputStream.readObject();
                     Index src, dest;

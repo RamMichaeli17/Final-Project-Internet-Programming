@@ -105,6 +105,10 @@ import java.util.stream.Collectors;
                     case "3": {
                         System.out.println("From client\nTask3 is running...");
                         toServer.writeObject("3");
+                        toServer.writeObject(source);
+                        int sizeS = (int) fromServer.readObject();
+                        System.out.println("from Server - Number of valid submarines is:  " + sizeS);
+                        System.out.println("from client: Task3 finish");
                         //TODO: add the rest of code for this case
                         break;
                     }
