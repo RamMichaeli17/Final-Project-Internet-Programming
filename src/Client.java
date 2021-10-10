@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
 
             // sending #1 matrix
             int[][] source = {
-                    {0, 0, 0},
+                    {1, 0, 0},
                     {0, 0, 1},
                     {0, 0, 1},
             };
