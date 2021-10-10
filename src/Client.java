@@ -12,8 +12,6 @@ import java.util.stream.Collectors;
  */
 
     public class Client {
-
-        //think if we need this for task 4 or another task (?)
     public static Index indexRequest(Matrix matrix){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter row for Index");
@@ -75,7 +73,7 @@ import java.util.stream.Collectors;
                         System.out.println("From client\nTask1 is running...");
                         toServer.writeObject("1"); //inputStream from client to server- chosen task
                         toServer.writeObject(source); //inputStream from client to server- matrix
-                        //listOfSCCs - holds hashSet of hashSet (each hashSet is connected component)
+
                         //server transfers data to client.
                         HashSet<HashSet<Index>> listOfSCCs =
                                 new HashSet<>((List<HashSet<Index>>) fromServer.readObject());

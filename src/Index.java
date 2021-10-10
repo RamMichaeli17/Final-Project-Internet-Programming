@@ -15,9 +15,9 @@ public class Index implements Serializable {
         this.column = column;
     }
 
-    public int getRow() {  return row;  }
+    // public int getRow() {  return row;  }
 
-    public int getColumn() {return column;}
+   // public int getColumn() {return column;}
     /**
      * The function compares between objects (between all their data members) and returns boolean value
      * @param o Object represent the object we compare to

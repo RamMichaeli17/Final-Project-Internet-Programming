@@ -34,26 +34,30 @@ public class ThreadLocalBellmanFord <T> implements Serializable {
      *
      * maybe we should return List<List<Node<T>>> (?)
      */
-    public LinkedList<List<Node<T>>> findPaths(Traversable<T> someGraph, Node<T> src, Node<T> dst) {
-        List<Node<T>> path = new ArrayList<>();
-        LinkedList<List<Node<T>>> listPaths = new LinkedList<>();
-        path.add(src);
-        queueThreadLocal.get().offer(path);
-        while (!queueThreadLocal.get().isEmpty()) {
 
-            path = queueThreadLocal.get().poll();
-            Node<T> last = path.get(path.size() - 1);
+    public LinkedList<List<Node<T>>> findPaths(Traversable<T> someGraph, Node<T> src, Node<T> dst) {
+
+        List<Node<T>> path = new ArrayList<>(); //this list will hold a singlePath
+        LinkedList<List<Node<T>>> listPaths = new LinkedList<>(); //this list will hold all paths between source to destination
+        path.add(src);  //each path will start with the same Node
+        queueThreadLocal.get().offer(path); //add path to threadLocal (at first it holds the source node)
+        while (!queueThreadLocal.get().isEmpty()) {
+            //while we do not pass all over the neighbors
+
+            path = queueThreadLocal.get().poll(); //take the first node in the queue
+            Node<T> last = path.get(path.size() - 1); //get the size of path
             // If last vertex is the desired destination
-            // then print the path
+            // then add the path to lists of paths (because we want to reach the destination...)
             if (last.equals(dst)) {
                 listPaths.add(path);
             }
-            Collection<Node<T>> neighborsIndices = someGraph.getNeighbors(last);
+            Collection<Node<T>> neighborsIndices = someGraph.getNeighbors(last); //get all neighbors of last index/node
             for (Node<T> neighbor : neighborsIndices) {
-                if (isNotVisited(neighbor, path)) {
+                if (isNotVisited(neighbor, path)) {// if there is neighbors that we do not visit him(not contains in path) we keeping it in a new path
+                    //why? because we're looking for all paths ...
                     List<Node<T>> newpath = new ArrayList<>(path);
                     newpath.add(neighbor);
-                    queueThreadLocal.get().offer(newpath);
+                    queueThreadLocal.get().offer(newpath); //add path to threadLocal
                 }
 
             }
@@ -95,8 +99,8 @@ public class ThreadLocalBellmanFord <T> implements Serializable {
     public int SumPathWeight(Traversable<T> someGraph, List<Node<T>> list) {
         int sum = 0;
         for (Node<T> node : list) {
+            //we pass on the nodes in the specific path and summarize the wight
             sum = sum + someGraph.getValueN(node.getData());
-
         }
         return sum;
     }
@@ -112,25 +116,32 @@ public class ThreadLocalBellmanFord <T> implements Serializable {
      * @param dst represent final/ destination index
      * @return LinkedList<List < Node < T>>> - all the lightest weight paths between source node to destination
      */
+
     public LinkedList<List<Node<T>>> findPathsBellmanFord(Traversable<T> someGraph, Node<T> src, Node<T> dst) {
+
         //initial to 0
         //AtomicInteger sum= new AtomicInteger(0) == AtomicInteger sum= new AtomicInteger()
 
-        AtomicInteger sumPath = new AtomicInteger();
-        AtomicInteger currMinSum = new AtomicInteger();
-        AtomicInteger totalMinSum = new AtomicInteger();
-        currMinSum.set(Integer.MAX_VALUE);
-        LinkedList<Future<List<Node<T>>>> futureList = new LinkedList<>();
-        LinkedList<List<Node<T>>> listPaths = findPaths(someGraph, src, dst);
-        LinkedList<List<Node<T>>> listMinTotalWeight = new LinkedList<>();
-        LinkedList<List<Node<T>>> listMinTotalWeightfurure = new LinkedList<>();
-        for (List<Node<T>> list : listPaths) {
+        AtomicInteger sumPath = new AtomicInteger(); //will hold sum of specific path
+        AtomicInteger currMinSum = new AtomicInteger(); //will hold current minimum sum of path
+        AtomicInteger totalMinSum = new AtomicInteger(); //will hold the minimum of all the paths
+
+        currMinSum.set(Integer.MAX_VALUE); //Integer.MAX_VALUE=2147483647
+
+        LinkedList<List<Node<T>>> listPaths = findPaths(someGraph, src, dst); //will hold all paths between source to destination
+        LinkedList<List<Node<T>>> listMinTotalWeight = new LinkedList<>(); //will hold all lightest paths between source to destination
+
+        LinkedList<Future<List<Node<T>>>> futureList = new LinkedList<>(); //Future list , submit value later
+        LinkedList<List<Node<T>>> listMinTotalWeightfurure = new LinkedList<>(); //will hold all lightest Future paths between source to destination
+
+        for (List<Node<T>> list : listPaths) { //pass all over lists to find the min sum
             //callable returns value
             Callable<List<Node<T>>> callable = () -> {
                 readWriteLock.writeLock().lock();
-                sumPath.set(SumPathWeight(someGraph, list));
+                sumPath.set(SumPathWeight(someGraph, list)); //check sum of current path
 
                 if (sumPath.get() <= currMinSum.get()) {
+                    //thats mean we need to update values of currMinSum & totalMinSUm
                     currMinSum.set(sumPath.get());
                     totalMinSum.set(currMinSum.get());
                     readWriteLock.writeLock().unlock();
@@ -145,31 +156,31 @@ public class ThreadLocalBellmanFord <T> implements Serializable {
                 }
 
             };
-            Future<List<Node<T>>> futurePath = threadPoolExecutor.submit(callable);
-            futureList.add(futurePath);
+            Future<List<Node<T>>> futurePath = threadPoolExecutor.submit(callable); //submit value in Future thread
+            futureList.add(futurePath); //add the future path to future list
         }
 
         for (Future<List<Node<T>>> futureP : futureList) {
 
             try {
                 if (futureP.get() != null)
-                    listMinTotalWeightfurure.add(futureP.get());
+                    listMinTotalWeightfurure.add(futureP.get()); //add future path to future list just if the path is not null
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
 
 
         }
-
-        int sum = 0;
+        int sum = 0; //reset sum variable for next calculate on future list
         for (List<Node<T>> listp : listMinTotalWeightfurure) {
             for (Node<T> nodeT : listp) {
                 sum = sum + someGraph.getValueN(nodeT.getData());
             }
+            //we have already found the min sum, so we need just to check if the sums equals
             if (sum == totalMinSum.get()) {
                 listMinTotalWeight.add(listp);
             }
-            sum = 0;
+            sum = 0; //reset sum variable for next calculate in for loop
 
         }
         this.threadPoolExecutor.shutdown();

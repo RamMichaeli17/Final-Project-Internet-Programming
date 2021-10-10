@@ -1,6 +1,8 @@
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
+
 /**
  * This class represents a Thread-safe DFS algorithm.
  *
@@ -30,7 +32,7 @@ public class ThreadLocalDFSVisit<T> {
      * This Future object functions as a handle to the result of the asynchronous task
      *
      * @param SomeGraph represent current Graph (we relate matrix as graph)
-     * @param listOfIndex represent indexes to run on them
+     * @param listOfIndex -list of indexes their value is 1 (connected components are indexes with value 1).
      * @return HashSet<HashSet<T>> - list of all SCCs in the current graph
      */
     public HashSet<HashSet<T>> parallelDFSTraverse(Traversable<T> SomeGraph, List<Index> listOfIndex){
@@ -43,6 +45,8 @@ public class ThreadLocalDFSVisit<T> {
             Callable<HashSet<T>> MyCallable = () -> {
                 readWriteLock.writeLock().lock();
                 SomeGraph.setStartIndex(listOfIndex.get(finalI));
+
+                System.out.println("This thread: "+ Thread.currentThread().getName());
 
                 //traverse method warp by callable
                 HashSet<Index> singleSCC = (HashSet<Index>) this.traverse(SomeGraph);
@@ -107,7 +111,37 @@ public class ThreadLocalDFSVisit<T> {
         return connectedComponent;
         }
 
+    /**
+     * findSCCs- this function get a 2D matrix and finds all scc in this matrix
+     * @param source -primitiveMatrix
+     * @return list of SCCs
+     */
 
+    public List<HashSet<Index>> findSCCs(int[][] source)
+    {
+        HashSet<HashSet<Index>> allSCCs;
+        List<Index> listOne;
+        //convert primitive matrix to Matrix
+        Matrix sourceMatrix = new Matrix(source);
+        sourceMatrix.printMatrix();
+
+        //parallelDFSTraverse need to get traversable<T> , list<HashSet<Index>>> :
+        TraversableMatrix myTraversableM = new TraversableMatrix(sourceMatrix); //convert Matrix to TraversableMatrix
+        listOne = sourceMatrix.findAllOnes(); //each connected component contains only nodes with value==1
+        System.out.println(listOne);
+
+        //set the first index - "Initialize start index"
+        myTraversableM.setStartIndex(myTraversableM.getStartIndex());
+        ThreadLocalDFSVisit<Index> algo = new ThreadLocalDFSVisit<>();
+
+        //call to parallelDFSTraverse method
+        allSCCs = algo.parallelDFSTraverse(myTraversableM, listOne);
+        List<HashSet<Index>> list = allSCCs.stream().sorted(Comparator.comparingInt(HashSet::size))
+                .collect(Collectors.toList());
+
+        return list;
+
+    }
 
 }
 
