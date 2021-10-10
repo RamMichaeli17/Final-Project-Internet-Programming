@@ -52,9 +52,9 @@ import java.util.stream.Collectors;
 
             // sending #1 matrix
             int[][] source = {
-                    {1, 0, 0},
-                    {1, 0, 1},
-                    {1, 0, 1},
+                    {0, 0, 0},
+                    {0, 0, 1},
+                    {0, 0, 1},
             };
             // output - [[(0,0), (2,2), (1,2), (0,1)], [(2,0)]]
 
@@ -72,7 +72,7 @@ import java.util.stream.Collectors;
                 String result= scanner.next(); //next() input for string
                 switch(result){
                     case "1": {
-                        System.out.println("From client\nTask1 is running...");
+                        System.out.println("From client\nTask 1 is running...");
                         toServer.writeObject("1"); //inputStream from client to server- chosen task
                         toServer.writeObject(source); //inputStream from client to server- matrix
                         //listOfSCCs - holds hashSet of hashSet (each hashSet is connected component)
@@ -90,31 +90,31 @@ import java.util.stream.Collectors;
                        List<HashSet<Index>> list = listOfSCCs.stream().sorted(Comparator.comparingInt(HashSet::size))
                                 .collect(Collectors.toList());
                         System.out.println("from server: Connected Components are- " + list);
-                        System.out.println("from client: task1 is finished\n");
+                        System.out.println("from client: task 1 is finished\n");
                         scanner.nextLine();
                         break;
                     }
 
                    case "2": {
-                        System.out.println("From client\nTask2 is running...");
+                        System.out.println("From client\nTask 2 is running...");
                         toServer.writeObject("2");
                         //TODO: add the rest of code for this case
                         break;
                     }
 
                     case "3": {
-                        System.out.println("From client\nTask3 is running...");
+                        System.out.println("From client\nTask 3 is running...");
                         toServer.writeObject("3");
-                        toServer.writeObject(source);
+                        toServer.writeObject(source);//the matrix that we send
                         int sizeS = (int) fromServer.readObject();
-                        System.out.println("from Server - Number of valid submarines is:  " + sizeS);
-                        System.out.println("from client: Task3 finish");
+                        System.out.println("from Server - Number of submarines is:  " + sizeS);
+                        System.out.println("from client: Task 3 finish");
                         //TODO: add the rest of code for this case
                         break;
                     }
 
                     case "4": {
-                        System.out.println("From client\n Task4 is running...");
+                        System.out.println("From client\n Task 4 is running...");
                         toServer.writeObject("4");
                         toServer.writeObject(source4); //inputStream from client to server- matrix
                         Matrix matrix= new Matrix(source4);
@@ -126,7 +126,7 @@ import java.util.stream.Collectors;
                         LinkedList<List<Index>> minWeightList = new LinkedList<>((LinkedList<List<Index>>) fromServer.readObject());
                         System.out.println("from Server - The easiest routes are: " + minWeightList);
                         toServer.writeObject(minWeightList);
-                        System.out.println("from client: Task4 finish");
+                        System.out.println("from client: Task 4 finish");
                         scanner.nextLine();
                         break;
                     }

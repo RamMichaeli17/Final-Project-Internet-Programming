@@ -108,25 +108,31 @@ public class ThreadLocalDFSVisit<T> {
         }
 
     /**
-     * submarine: the function count number of valid submarines
+     * submarine: the function count number of valid submarines:
+     *  * 1. Minimum of two "1" vertically.
+     *  * 2. Minimum of two "1" horizontally.
+     *  * 3. There cannot be "1" diagonally unless arguments 1 and 2 are implied.
+     *  * 4. The minimal distance between two submarines is at least one index("0").
      *
-     * @param hashSetList type: HashSet<HashSet<Index>>
-     * @param primitiveMatrix type: int[][]
+     * @param hashSetList type: HashSet<HashSet<Index>> list of SCC
+     * @param tempArray type: int[][] the matrix that we send in the beginning
      * @return int
      */
-    public int submarine(List<HashSet<Index>> hashSetList, int[][] primitiveMatrix) {
-        int count = hashSetList.size(), minRow = 10000, minCol = 10000, maxRow = -1, maxCol = -1;
-        int flag1 = 0;
-        for (HashSet<Index> s : hashSetList) {
+    public int subCheck(List<HashSet<Index>> hashSetList, int[][] tempArray) {
+        int countSub = hashSetList.size();// size of the optional submarine
+        int minRow = Integer.MAX_VALUE, minCol = Integer.MAX_VALUE, maxRow = Integer.MIN_VALUE, maxCol = Integer.MIN_VALUE;
+        int flag = 0;// that flag will be 1 if some scc isn't a submarine and after that countSub--
+        for (HashSet<Index> s : hashSetList) {// run on each SCC
             for (Index index : s) {
+                if (s.size() == 1)// SCC==1 not a sub
+                    flag = 1;
 
-                if (s.size() == 1) {
-                    flag1 = 1;
-                }
-                if (flag1 == 1)
-                    count--;
-                flag1 = 0;
-                if (index.row <= minRow)
+                if (flag == 1)
+                    countSub--;
+
+                flag = 0;
+
+                if (index.row <= minRow) //Shape boundaries of the submarine in the form of a square or rectangle
                     minRow = index.row;
                 if (index.column <= minCol)
                     minCol = index.column;
@@ -136,29 +142,26 @@ public class ThreadLocalDFSVisit<T> {
                     maxCol = index.column;
             }
 
-            for (int i = minRow; i <= maxRow; i++) {
+            for (int i = minRow; i <= maxRow; i++) {// checking on tempArray if we have a submarine
                 for (int j = minCol; j <= maxCol; j++) {
-                    if (primitiveMatrix[i][j] == 0) {
-                        flag1 = 1;
+                    if (tempArray[i][j] == 0) {
+                        flag = 1;
                     }
-
                 }
-
             }
-            if (flag1 == 1)
-                count--;
-            flag1 = 0;
-            minRow = 10000;
-            minCol = 10000;
-            maxRow = -1;
-            maxCol = -1;
+
+            if (flag == 1)
+                countSub--;
+            flag = 0;
+            minRow = Integer.MAX_VALUE;
+            minCol = Integer.MAX_VALUE;
+            maxRow = Integer.MIN_VALUE;
+            maxCol = Integer.MIN_VALUE;
         }
-        if (count < 0)
-            count = 0;
-        return count;
+        if (countSub < 0)
+            countSub = 0;
+        return countSub;
     }
-
-
 
 }
 
