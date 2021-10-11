@@ -142,6 +142,61 @@ public class ThreadLocalDFSVisit<T> {
         return list;
 
     }
+    /**
+     * submarine: the function count number of valid submarines:
+     *  * 1. Minimum of two "1" vertically.
+     *  * 2. Minimum of two "1" horizontally.
+     *  * 3. There cannot be "1" diagonally unless arguments 1 and 2 are implied.
+     *  * 4. The minimal distance between two submarines is at least one index("0").
+     *
+     * @param hashSetList type: HashSet<HashSet<Index>> list of SCC
+     * @param tempArray type: int[][] the matrix that we send in the beginning
+     * @return int
+     */
+    public int subCheck(List<HashSet<Index>> hashSetList, int[][] tempArray) {
+        int countSub = hashSetList.size();// size of the optional submarine
+        int minRow = Integer.MAX_VALUE, minCol = Integer.MAX_VALUE, maxRow = Integer.MIN_VALUE, maxCol = Integer.MIN_VALUE;
+        int flag = 0;// that flag will be 1 if some scc isn't a submarine and after that countSub--
+        for (HashSet<Index> s : hashSetList) {// run on each SCC
+            for (Index index : s) {
+                if (s.size() == 1)// SCC==1 not a sub
+                    flag = 1;
+
+                if (flag == 1)
+                    countSub--;
+
+                flag = 0;
+
+                if (index.row <= minRow) //Shape boundaries of the submarine in the form of a square or rectangle
+                    minRow = index.row;
+                if (index.column <= minCol)
+                    minCol = index.column;
+                if (index.row > maxRow)
+                    maxRow = index.row;
+                if (index.column > maxCol)
+                    maxCol = index.column;
+            }
+
+            for (int i = minRow; i <= maxRow; i++) {// checking on tempArray if we have a submarine
+                for (int j = minCol; j <= maxCol; j++) {
+                    if (tempArray[i][j] == 0) {
+                        flag = 1;
+                    }
+                }
+            }
+
+            if (flag == 1)
+                countSub--;
+            flag = 0;
+            minRow = Integer.MAX_VALUE;
+            minCol = Integer.MAX_VALUE;
+            maxRow = Integer.MIN_VALUE;
+            maxCol = Integer.MIN_VALUE;
+        }
+        if (countSub < 0)
+            countSub = 0;
+        return countSub;
+    }
 
 }
 
