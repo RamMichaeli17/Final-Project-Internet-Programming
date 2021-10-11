@@ -17,29 +17,7 @@ public class MatrixIHandler implements IHandler {
         this.endIndex = null;
         this.doWork = true;
     }
-    public List<HashSet<Index>> findSCCs(int[][] source)
-    {
-        HashSet<HashSet<Index>> listOFHashsets;
-        List<Index> listOne;
-        Matrix sourceMatrix = new Matrix(source);
-        sourceMatrix.printMatrix();
 
-        //parallelDFSTraverse need to get traversable<T> , list<HashSet<Index>>> :
-        TraversableMatrix myTraversableM = new TraversableMatrix(sourceMatrix);
-        listOne = sourceMatrix.findAllOnes();
-        System.out.println(listOne);
-        //set the first index
-        myTraversableM.setStartIndex(myTraversableM.getStartIndex());
-        ThreadLocalDFSVisit<Index> algo = new ThreadLocalDFSVisit<>();
-
-        //call to parallelDFSTraverse method
-        listOFHashsets = algo.parallelDFSTraverse(myTraversableM, listOne);
-        List<HashSet<Index>> list = listOFHashsets.stream().sorted(Comparator.comparingInt(HashSet::size))
-                .collect(Collectors.toList());
-
-        return list;
-
-    }
 
     @Override
     public void handle(InputStream fromClient, OutputStream toClient) throws IOException, ClassNotFoundException {
@@ -79,28 +57,7 @@ public class MatrixIHandler implements IHandler {
                         objectOutputStream.writeObject(neighbors);
                     }
                     break;
-                }
 
-                 case "getReachables":{
-                    // handler will receive an index, then compute its neighbors
-                    Index tempIndex = (Index)objectInputStream.readObject();
-                    if(this.matrix!=null){
-                        List<Index> reachables = new ArrayList<>(this.matrix.getReachables(tempIndex));
-                        System.out.println("Server: neighbors of "+ tempIndex + ":  " + reachables);
-                        // send to socket's outputstream
-                        objectOutputStream.writeObject(reachables);
-                    }
-                }
-
-                //cases added
-                case "start index":{
-                    this.startIndex = (Index)objectInputStream.readObject();
-                    break;
-                }
-
-                case "end index":{
-                    this.endIndex = (Index)objectInputStream.readObject();
-                    break;
                 }*/
 
                 case "1":{ //dfs
@@ -110,8 +67,8 @@ public class MatrixIHandler implements IHandler {
                     System.out.println("Task1 is running...\nServer: Got 2d array from client");
                     List<HashSet<Index>> listOFSCCs;
                     //calling method will find the SCCs
-
-                    listOFSCCs=findSCCs(primitiveMatrix);
+                    ThreadLocalDFSVisit threadLocalDFSVisit=new ThreadLocalDFSVisit();
+                    listOFSCCs=threadLocalDFSVisit.findSCCs(primitiveMatrix);
                     //transfers to client the answer
                     objectOutputStream.writeObject(listOFSCCs);
                     System.out.println("Task1 finish\n");

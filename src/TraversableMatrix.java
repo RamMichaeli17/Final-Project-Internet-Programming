@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * This class implements adapter/wrapper/decorator design pattern
+ * This class implements' adapter/wrapper/decorator design pattern
  */
 public class TraversableMatrix implements Traversable<Index> {
     protected final Matrix matrix;
