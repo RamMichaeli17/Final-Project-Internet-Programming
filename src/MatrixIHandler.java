@@ -104,8 +104,8 @@ public class MatrixIHandler implements IHandler {
 
                     int[][] tempArray = (int[][]) objectInputStream.readObject();//the matrix that we send(now we read)
                     List<HashSet<Index>> listOFHashsets;
-                    listOFHashsets=findSCCs(tempArray);//list of SCC
                     ThreadLocalDFSVisit<Index> sub = new ThreadLocalDFSVisit<>();
+                    listOFHashsets=sub.findSCCs(tempArray);//list of SCC
                     int size = sub.subCheck(listOFHashsets, tempArray);
                     objectOutputStream.writeObject(size);
                     System.out.println("Task3 finish");
