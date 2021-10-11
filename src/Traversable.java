@@ -18,13 +18,8 @@ public interface Traversable<T> {
      */
     public Collection<Node<T>>  getReachableNodes(Node<T> someNode);
 
-
-    //what I have modified to the code
     public Collection<Node<T>>  getNeighbors(Node<T> someNode);
-    /**
-     * This method
-     * @param index
-     */
+
     public void setStartIndex(Index index);
 
     public void setEndIndex(Index index);
@@ -35,14 +30,7 @@ public interface Traversable<T> {
 
     public int getValueN(T someNode);
 
-
-    /**
-     * This method give us the destination node (makes the index be a node)
-     * @return Node<T> destination node
-     *
-     */
     public Node<T> getDestination();
-
 
     public Collection<Node<Index>> getReachableWeight(Node<T> someNode);
 

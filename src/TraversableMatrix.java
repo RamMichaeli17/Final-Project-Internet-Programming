@@ -10,6 +10,7 @@ public class TraversableMatrix implements Traversable<Index> {
     protected final Matrix matrix;
     protected Index startIndex, endIndex;
 
+    //Constructor
     public TraversableMatrix(Matrix matrix) {
         this.matrix = matrix;
     }
@@ -23,7 +24,6 @@ public class TraversableMatrix implements Traversable<Index> {
     }
 
 
-    //right now we don`t need this, maybe we can delete it
     public Index getEndIndex() {
         return endIndex;
     }
@@ -32,7 +32,11 @@ public class TraversableMatrix implements Traversable<Index> {
         this.endIndex = endIndex;
     }
 
-
+    /**
+     * This method receives some node and returns it value
+     * @param someNode type: Node<Index>
+     * @return int - the value (data) of the node
+     */
     @Override
     public int getValue(Node<Index> someNode) {
         return matrix.getValue(new Index(someNode.getData().row,someNode.getData().column));
@@ -45,23 +49,23 @@ public class TraversableMatrix implements Traversable<Index> {
 
     @Override
     public Node<Index> getOrigin() throws NullPointerException{
-        if (this.startIndex == null) throw new NullPointerException("start index is not initialized");
+        if (this.startIndex == null) throw new NullPointerException("Start index is not initialized");
         return new Node<>(this.startIndex);
 
     }
 
     @Override
     public Node<Index> getDestination() throws NullPointerException{
-        if (this.endIndex == null) throw new NullPointerException("end index is not initialized");
+        if (this.endIndex == null) throw new NullPointerException("End index is not initialized");
         return new Node<>(this.endIndex);
     }
 
+
+
     /**
-     * getReachableNodes find all SCC - Strong Connected Component
-     * [how? for each index its find the connected component from the current start index. (line 42)]
-     *
-     * @param someNode represents starting point
-     * @return reachableNodes including diagonals
+     * getReachableNodes() -  this function finds all the neighbors of specific node that their value equals to 1
+     * @param someNode represents starting node
+     * @return list (Collection) of all neighbors of specific node that their value is 1
      */
 
     @Override

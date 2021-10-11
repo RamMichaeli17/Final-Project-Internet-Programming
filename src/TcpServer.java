@@ -17,7 +17,7 @@ public class TcpServer {
 
     public TcpServer(int port){
         this.port = port;
-        // initialize data members (although they are initialized by default) for readability
+        // initialize data members (although they are initialized by default as false/null) for readability
         this.threadPool = null;
         stopServer = false;
         requestHandler = null;

@@ -117,7 +117,7 @@ public class MatrixIHandler implements IHandler {
                     System.out.println("Task1 finish\n");
                     break;
                 }
-              /*  case "2": { //bfs
+                case "2": { //bfs
                     int[][] primitiveMatrix = (int[][]) objectInputStream.readObject();
                     System.out.println("Server: Got 2d array from client");
                     this.matrix=new Matrix(primitiveMatrix);
@@ -132,14 +132,18 @@ public class MatrixIHandler implements IHandler {
                     TraversableMatrix traversable2 = new TraversableMatrix(this.matrix);
                     traversable2.setStartIndex(src);
                     traversable2.setEndIndex(dest);
-
-                    System.out.println("From server - find shortest paths:");
-                    System.out.println("start" + traversable2.getOrigin() + "end " + traversable2.getDestination());
+                    ParallelBFS bfs2 = new ParallelBFS();
+                    List<List<Index>> minPaths;
+                    minPaths = bfs2.parallelBFS(traversable2,traversable2.getOrigin(),traversable2.getDestination());
+                    System.out.println(minPaths);
+                    objectOutputStream.writeObject(minPaths);
+//                    System.out.println("From server - find shortest paths:");
+//                    System.out.println("start" + traversable2.getOrigin() + "end " + traversable2.getDestination());
                     //TODO: create an object of BFS class and call it function
-
                     System.out.println("Task2 finish");
                     break;
                 }
+                /*
                 case "3":{ //submarines
                     int[][] primitiveMatrix = (int[][]) objectInputStream.readObject();
                     System.out.println("Server: Got 2d array from client");

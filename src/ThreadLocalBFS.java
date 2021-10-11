@@ -1,4 +1,8 @@
 import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class ThreadLocalBFS<T> {
     final ThreadLocal<LinkedList<List<Node<T>>>> threadLocalQueue = ThreadLocal.withInitial(() -> new LinkedList<List<Node<T>>>());
@@ -34,23 +38,23 @@ public class ThreadLocalBFS<T> {
 
     }
 
-    public static void main(String[] args) {
-        int[][] myArray = {
-                {1,1,1,1,0},
-                {1,1,1,0,0},
-                {1,1,1,0,0},
-                {0,0,1,0,0}
-        };
-
-        TraversableMatrix myMatrixGraph = new TraversableMatrix(new Matrix(myArray));
-        System.out.println(myMatrixGraph);
-        myMatrixGraph.setStartIndex(new Index(0,0));
-        ThreadLocalBFS<Index> threadLocalBFS = new ThreadLocalBFS<>();
-        Node<Index> src = new Node (new Index(0,0));
-        Node<Index> dest = new Node (new Index(3,2));
-        System.out.println(threadLocalBFS.BFS(myMatrixGraph,src,dest));
-
-    }
+//    public static void main(String[] args) {
+//        int[][] myArray = {
+//                {1,1,1,1,0},
+//                {1,1,1,0,0},
+//                {1,1,1,0,0},
+//                {0,0,1,0,0}
+//        };
+//
+//        TraversableMatrix myMatrixGraph = new TraversableMatrix(new Matrix(myArray));
+//        System.out.println(myMatrixGraph);
+//        myMatrixGraph.setStartIndex(new Index(0,0));
+//        ThreadLocalBFS<Index> threadLocalBFS = new ThreadLocalBFS<>();
+//        Node<Index> src = new Node (new Index(0,0));
+//        Node<Index> dest = new Node (new Index(3,2));
+//        System.out.println(threadLocalBFS.BFS(myMatrixGraph,src,dest));
+//
+//    }
 
 
     /*

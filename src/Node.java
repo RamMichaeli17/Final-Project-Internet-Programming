@@ -40,20 +40,17 @@ public class Node<T> implements Serializable {
         this.parent = parent;
     }
 
-    /*
-This is used when accessing objects multiple times with comparisons,
-when using a HashTable
-Set<Node<T>> finished - this will work only if concrete object are different
-Node<Index> Node<Coordinate> Node<ComputerLocation>
-Node<Index> Node<Index> Node<Index>
- */
-    //equals objects have the same hashcode
-    //This method returns the hashcode of the current object, which is equal to the primitive int value.
+
+    /**
+     * This is used when accessing objects multiple times with comparisons.
+     * Equals objects have the same hashcode.
+     * This method returns the hashcode of the current object, which is equal to the primitive int value.
+     * @return
+     */
     @Override
     public int hashCode() {
         return data != null ? data.hashCode():0;
     }
-
 
     /**
      * The function compares between objects (between all their data members) and returns boolean value
@@ -64,9 +61,7 @@ Node<Index> Node<Index> Node<Index>
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Node)) return false;
-
         Node<?> state1 = (Node<?>) o;
-
         return Objects.equals(data, state1.data);
     }
 
@@ -74,5 +69,4 @@ Node<Index> Node<Index> Node<Index>
     public String toString() {
         return data.toString();
     }
-
 }

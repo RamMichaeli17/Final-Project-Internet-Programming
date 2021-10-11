@@ -6,9 +6,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * This class send messages and tasks to the server by client.
- * There is 4 task the client can choose - each task is on 2D matrix
- * all tasks are warp by switch-case
+ * This class send messages and tasks to the server by the client.
+ * There are 4 tasks that the client can choose - each task is on 2D matrix
+ * all the tasks wrapped by switch-case
  */
 
     public class Client {
@@ -58,6 +58,14 @@ import java.util.stream.Collectors;
             };
             // output - [[(0,0), (2,2), (1,2), (0,1)], [(2,0)]]
 
+            int[][] source2 = {
+                    {1,0,0},
+                    {1,1,0},
+                    {1,1,0}
+            };
+            //output from (0,0) to (2,0) will be:
+            // [[(0,0), (1,0), (2,0)], [(0,0), (1,1), (2,0)]]
+
             int[][] source4 ={
                     {100,100,100},
                     {300,900,500},
@@ -98,6 +106,17 @@ import java.util.stream.Collectors;
                    case "2": {
                         System.out.println("From client\nTask2 is running...");
                         toServer.writeObject("2");
+                        toServer.writeObject(source2);
+                        Matrix matrix = new Matrix(source2);
+                        Index startIndex = indexRequest(matrix); //input
+                        toServer.writeObject(startIndex);
+                        Index endIndex= indexRequest(matrix); //input
+                        toServer.writeObject(endIndex);
+                        List<List<Index>> minPaths = new ArrayList<>((List<List<Index>>) fromServer.readObject());
+                       System.out.println(minPaths);
+                       toServer.writeObject(minPaths);
+                       System.out.println("from client: Task2 finish");
+                       scanner.nextLine();
                         //TODO: add the rest of code for this case
                         break;
                     }
