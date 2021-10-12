@@ -7,7 +7,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class ThreadLocalBFS<T> {
     final ThreadLocal<LinkedList<List<Node<T>>>> threadLocalQueue = ThreadLocal.withInitial(() -> new LinkedList<List<Node<T>>>());
 
-    public List<List<Node<T>>> BFS (Traversable<T> someGraph, Node<T> src, Node<T> dest) {
+    public List<List<Node<T>>> findShortestPathsBFS(Traversable<T> someGraph, Node<T> src, Node<T> dest) {
         int sizeOfMinPath=Integer.MAX_VALUE;
         List<List<Node<T>>> minPaths = new ArrayList<>();
         ArrayList<Node<T>> path = new ArrayList<>();

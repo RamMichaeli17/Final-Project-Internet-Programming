@@ -11,7 +11,12 @@ import java.util.stream.Collectors;
  * all the tasks wrapped by switch-case
  */
 
-    public class Client {
+public class Client {
+
+    /**
+     * @param matrix
+     * @return Index with the row and column the client entered
+     */
     public static Index indexRequest(Matrix matrix){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter row for Index");
@@ -30,135 +35,152 @@ import java.util.stream.Collectors;
     }
 
     private static void printOptionToClient() {
-        System.out.println("Please choose one task: (all the tasks works on matrix)");
+        System.out.println("Please choose one task: (all the tasks work on matrix)");
         System.out.println("1--> Find all SCCs [first task]");
-        System.out.println("2--> Find all shortest paths from one index to another [second task]");
-        System.out.println("3--> Find count of submarines [third task]");
-        System.out.println("4--> Find the lightest paths from one index to another [fourth task]");
+        System.out.println("2.1--> Find all shortest paths from source to destination [second task]");
+        System.out.println("2.2--> *Parallel* Find all shortest paths from source to destination [second task]");
+        System.out.println("3--> Find number of battleships [third task]");
+        System.out.println("4--> Find all lightest paths from source to destination [fourth task]");
         System.out.println("stop--> Exit the program");
     }
 
-        public static void main(String[] args) throws IOException, ClassNotFoundException ,ClassCastException{
+    public static void main(String[] args) throws IOException, ClassNotFoundException ,ClassCastException{
 
-            Scanner scanner = new Scanner(System.in); //for the client inputs
-            Socket socket =new Socket("127.0.0.1",8010);
-            System.out.println("client: Created Socket");
+        Scanner scanner = new Scanner(System.in); //for the client inputs
+        /**
+         * local host, loopback address.
+         * operational socket.
+         */
+        Socket socket =new Socket("127.0.0.1",8010);
+        System.out.println("client: Created Socket");
 
-            //warp InputStream & OutputStream in order to send/receive meaningful data
-            ObjectOutputStream toServer=new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream fromServer=new ObjectInputStream(socket.getInputStream());
+        //warp InputStream & OutputStream in order to send/receive meaningful data
+        ObjectOutputStream toServer=new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream fromServer=new ObjectInputStream(socket.getInputStream());
 
-            // sending #1 matrix
-            int[][] source = {
-                    {1, 0, 0},
-                    {0, 0, 1},
-                    {0, 0, 1},
-            };
-            // output - [[(0,0), (2,2), (1,2), (0,1)], [(2,0)]]
+        int[][] source1 = {
+                {1, 0, 0},
+                {0, 0, 1},
+                {0, 0, 1},
+        };
+        // output - [[(0,0)], [(1,2), (2,2)]]
 
-            int[][] source2 = {
-                    {1,0,0},
-                    {1,1,0},
-                    {1,1,0}
-            };
-            //output from (0,0) to (2,0) will be:
-            // [[(0,0), (1,0), (2,0)], [(0,0), (1,1), (2,0)]]
+        int[][] source2 = {
+                {1,0,0},
+                {1,1,0},
+                {1,1,0}
+        };
+        //output from (0,0) to (2,0) will be:
+        // [[(0,0), (1,0), (2,0)], [(0,0), (1,1), (2,0)]]
 
-            int[][] source4 ={
-                    {100,100,100},
-                    {300,900,500},
-                    {100,100,100},
-            };
-            // output from (1,0) to (1,2) will be:
-            // [[(1,0),(0,1),(1,2)],[(1,0),(2,1),(1,2)]] , with weight 900 - it also include diagonals.
+        int[][] source3 = {
+                {1,1,1},
+                {0,0,0},
+                {1,1,1}
+        };
+        //output - 2
 
-            boolean flag = false;
-            while(!flag){ // while !stop
-                printOptionToClient(); //print menu for client
-                String result= scanner.next(); //next() input for string
-                switch(result){
-                    case "1": {
-                        System.out.println("From client\nTask 1 is running...");
-                        toServer.writeObject("1"); //inputStream from client to server- chosen task
-                        toServer.writeObject(source); //inputStream from client to server- matrix
+        int[][] source4 ={
+                {100,100,100},
+                {300,900,500},
+                {100,100,100},
+        };
+        // output from (1,0) to (1,2) will be:
+        // [[(1,0),(0,1),(1,2)],[(1,0),(2,1),(1,2)]] , with weight 900 - it also includes diagonals.
 
-                        //server transfers data to client.
-                        HashSet<HashSet<Index>> listOfSCCs =
-                                new HashSet<>((List<HashSet<Index>>) fromServer.readObject());
-
-                         /* A hashSet is unsorted Collection. In java 8 we can do like this:
-                           fooHashSet.stream()
-                          .sorted(Comparator.comparing(Foo::getSize)) //comparator - how you want to sort it
-                          .collect(Collectors.toList()); //collector - what you want to collect it to
-                        */
-
-                        //sort listOfSCCs
-                       List<HashSet<Index>> list = listOfSCCs.stream().sorted(Comparator.comparingInt(HashSet::size))
-                                .collect(Collectors.toList());
-                        System.out.println("from server: Connected Components are- " + list);
-                        System.out.println("from client: task 1 is finished\n");
-                        scanner.nextLine();
-                        break;
-                    }
-
-                   case "2": {
-                        System.out.println("From client\nTask 2 is running...");
-                        toServer.writeObject("2");
-                        toServer.writeObject(source2);
-                        Matrix matrix = new Matrix(source2);
-                        Index startIndex = indexRequest(matrix); //input
-                        toServer.writeObject(startIndex);
-                        Index endIndex= indexRequest(matrix); //input
-                        toServer.writeObject(endIndex);
-                        List<List<Index>> minPaths = new ArrayList<>((List<List<Index>>) fromServer.readObject());
-                       System.out.println(minPaths);
-                       toServer.writeObject(minPaths);
-                       System.out.println("from client: Task2 finish");
-                       scanner.nextLine();
-                        //TODO: add the rest of code for this case
-                        break;
-                    }
-
-                    case "3": {
-                        System.out.println("From client\nTask 3 is running...");
-                        toServer.writeObject("3");
-                        toServer.writeObject(source);//the matrix that we send
-                        int sizeS = (int) fromServer.readObject();
-                        System.out.println("from Server - Number of submarines is:  " + sizeS);
-                        System.out.println("from client: Task 3 finish");
-                        //TODO: add the rest of code for this case
-                        break;
-                    }
-
-                    case "4": {
-                        System.out.println("From client\n Task 4 is running...");
-                        toServer.writeObject("4");
-                        toServer.writeObject(source4); //inputStream from client to server- matrix
-                        Matrix matrix= new Matrix(source4);
-                        Index startIndex = indexRequest(matrix); //input
-                        toServer.writeObject(startIndex);
-                        Index endIndex= indexRequest(matrix); //input
-                        toServer.writeObject(endIndex);
-
-                        LinkedList<List<Index>> minWeightList = new LinkedList<>((LinkedList<List<Index>>) fromServer.readObject());
-                        System.out.println("from Server - The easiest routes are: " + minWeightList);
-                        toServer.writeObject(minWeightList);
-                        System.out.println("from client: Task 4 finish");
-                        scanner.nextLine();
-                        break;
-                    }
-                    case "stop": {
-                        flag = true;
-                        toServer.writeObject("stop");
-                        fromServer.close();
-                        toServer.close();
-                        socket.close();
-                        System.out.println("client: Closed operational socket");
-                        break;
-                    }
-
+        boolean flag = false;
+        while(!flag){ // while !stop
+            printOptionToClient(); //print menu for client
+            String result= scanner.next(); //next() input for string
+            switch(result){
+                case "1": {
+                    System.out.println("From client: Task 1 is running...");
+                    toServer.writeObject("1"); //inputStream from client to server- chosen task
+                    toServer.writeObject(source1); //inputStream from client to server- matrix
+                    //server transfers data to client.
+                    HashSet<HashSet<Index>> listOfSCCs = new HashSet<>((List<HashSet<Index>>) fromServer.readObject());
+                    System.out.println("From server: Strongly connected components are: " + listOfSCCs);
+                    System.out.println("From client: Task 1 finished\n");
+                    scanner.nextLine();
+                    break;
                 }
+
+                case "2.1": {
+                    System.out.println("From client: Task 2.1 is running...");
+                    toServer.writeObject("2.1");
+                    toServer.writeObject(source2);
+                    Matrix matrix = new Matrix(source2);
+                    System.out.println("Now scanning the source node:");
+                    Index startIndex = indexRequest(matrix); //input
+                    toServer.writeObject(startIndex);
+                    System.out.println("Now scanning the destination node:");
+                    Index endIndex= indexRequest(matrix); //input
+                    toServer.writeObject(endIndex);
+                    List<List<Index>> minPaths = new ArrayList<>((List<List<Index>>) fromServer.readObject());
+                    System.out.println("From server: Shortest paths from source " + startIndex + " to destination " + endIndex + " are:\n" + minPaths);
+                    System.out.println("From client: Task 2.1 finished\n");
+                    scanner.nextLine();
+                    break;
+                }
+
+                case "2.2": {
+                    System.out.println("From client: Task 2.2 is running...");
+                    toServer.writeObject("2.2");
+                    toServer.writeObject(source2);
+                    Matrix matrix = new Matrix(source2);
+                    System.out.println("Now scanning the source node:");
+                    Index startIndex = indexRequest(matrix); //input
+                    toServer.writeObject(startIndex);
+                    System.out.println("Now scanning the destination node:");
+                    Index endIndex= indexRequest(matrix); //input
+                    toServer.writeObject(endIndex);
+                    List<List<Index>> minPaths = new ArrayList<>((List<List<Index>>) fromServer.readObject());
+                    System.out.println("From server: Shortest paths from source " + startIndex + " to destination " + endIndex + " are:\n" + minPaths);
+                    System.out.println("From client: Task 2.2 finished\n");
+                    scanner.nextLine();
+                    break;
+                }
+
+                case "3": {
+                    System.out.println("From client: Task 3 is running...");
+                    toServer.writeObject("3");
+                    toServer.writeObject(source3);//the matrix that we send
+                    int sizeS = (int) fromServer.readObject();
+                    System.out.println("From Server: Number of battleships is: " + sizeS);
+                    System.out.println("From client: Task 3 finished\n");
+                    scanner.nextLine();
+                    break;
+                }
+
+                case "4": {
+                    System.out.println("From client: Task 4 is running...");
+                    toServer.writeObject("4");
+                    toServer.writeObject(source4); //inputStream from client to server- matrix
+                    Matrix matrix= new Matrix(source4);
+                    System.out.println("Now scanning the source node:");
+                    Index startIndex = indexRequest(matrix); //input
+                    toServer.writeObject(startIndex);
+                    System.out.println("Now scanning the destination node:");
+                    Index endIndex= indexRequest(matrix); //input
+                    toServer.writeObject(endIndex);
+                    LinkedList<List<Index>> minWeightList = new LinkedList<>((LinkedList<List<Index>>) fromServer.readObject());
+                    System.out.println("From server: Lightest paths from source " + startIndex + " to destination " + endIndex + " are:\n" + minWeightList);
+                    System.out.println("From client: Task 4 finished\n");
+                    scanner.nextLine();
+                    break;
+                }
+                case "stop": {
+                    flag = true;
+                    toServer.writeObject("stop");
+                    fromServer.close();
+                    toServer.close();
+                    socket.close();
+                    System.out.println("Client: Closed operational socket");
+                    break;
+                }
+
             }
         }
+    }
 }
 

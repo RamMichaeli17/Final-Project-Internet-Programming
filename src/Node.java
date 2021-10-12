@@ -5,8 +5,12 @@ import java.util.Objects;
  * This class wraps a concrete object and supplies getters and setters
  * @param <T>
  */
+
+/**
+ * The interface Serializable doesn't force us to implement any specific method.
+ * Classes that do not implement Serializable interface will not have any of their state serialized or deserialized.
+ */
 public class Node<T> implements Serializable {
-    //Classes that do not implement Serializable interface will not have any of their state serialized or deserialized.
     private T data;
     private Node<T> parent;
 

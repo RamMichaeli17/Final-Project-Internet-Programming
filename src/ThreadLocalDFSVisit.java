@@ -128,7 +128,6 @@ public class ThreadLocalDFSVisit<T> {
         //parallelDFSTraverse need to get traversable<T> , list<HashSet<Index>>> :
         TraversableMatrix myTraversableM = new TraversableMatrix(sourceMatrix); //convert Matrix to TraversableMatrix
         listOne = sourceMatrix.findAllOnes(); //each connected component contains only nodes with value==1
-        System.out.println(listOne);
 
         //set the first index - "Initialize start index"
         myTraversableM.setStartIndex(myTraversableM.getStartIndex());
@@ -153,7 +152,7 @@ public class ThreadLocalDFSVisit<T> {
      * @param tempArray type: int[][] the matrix that we send in the beginning
      * @return int
      */
-    public int subCheck(List<HashSet<Index>> hashSetList, int[][] tempArray) {
+    public int battleshipCheck(List<HashSet<Index>> hashSetList, int[][] tempArray) {
         int countSub = hashSetList.size();// size of the optional submarine
         int minRow = Integer.MAX_VALUE, minCol = Integer.MAX_VALUE, maxRow = Integer.MIN_VALUE, maxCol = Integer.MIN_VALUE;
         int flag = 0;// that flag will be 1 if some scc isn't a submarine and after that countSub--

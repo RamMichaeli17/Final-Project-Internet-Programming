@@ -36,7 +36,7 @@ public class ParallelBFS<T> {
             return allPaths;
     }
 
-    public List<List<Node<T>>> parallelBFS (Traversable<T> someGraph, Node<T> src, Node<T> dest) {
+    public List<List<Node<T>>> findShortestPathsParallelBFS(Traversable<T> someGraph, Node<T> src, Node<T> dest) {
         //למה אטומיק
         AtomicInteger sizeOfMinPath = new AtomicInteger();
         AtomicInteger sizeOfPath = new AtomicInteger();

@@ -117,7 +117,7 @@ public class ThreadLocalBellmanFord <T> implements Serializable {
      * @return LinkedList<List < Node < T>>> - all the lightest weight paths between source node to destination
      */
 
-    public LinkedList<List<Node<T>>> findPathsBellmanFord(Traversable<T> someGraph, Node<T> src, Node<T> dst) {
+    public LinkedList<List<Node<T>>> findLightestPathsBellmanFord(Traversable<T> someGraph, Node<T> src, Node<T> dst) {
 
         //initial to 0
         //AtomicInteger sum= new AtomicInteger(0) == AtomicInteger sum= new AtomicInteger()

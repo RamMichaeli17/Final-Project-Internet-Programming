@@ -6,12 +6,13 @@ import java.util.stream.Collectors;
  * This class represents a Matrix Entity and functions that use a 2D array (primitiveMatrix)
  */
 
+/**
+ * The interface Serializable doesn't force us to implement any specific method.
+ * Classes that do not implement Serializable interface will not have any of their state serialized or deserialized.
+ */
 public class Matrix implements Serializable {
-    //Classes that do not implement Serializable interface will not have any of their state serialized or deserialized.
-
     int[][] primitiveMatrix;
 
-    //constructor
     public Matrix(int[][] oArray){
         List<int[]> list = new ArrayList<>();
         for (int[] row : oArray) {
@@ -21,6 +22,13 @@ public class Matrix implements Serializable {
         primitiveMatrix = list.toArray(new int[0][]);
     }
 
+    /**
+     * The StringBuilder in Java represents a mutable sequence of characters.
+     * StringBuilder class differs from the StringBuffer class on the basis of synchronization.
+     * The StringBuilder class provides no guarantee of synchronization whereas the StringBuffer class does.
+     * Where possible, it is recommended that this class be used in preference to StringBuffer as it will be faster under most implementations.
+     * Instances of StringBuilder are not safe for use by multiple threads. If such synchronization is required then it is recommended that StringBuffer be used.
+     */
     @Override
     public String toString(){
         StringBuilder stringBuilder = new StringBuilder();
