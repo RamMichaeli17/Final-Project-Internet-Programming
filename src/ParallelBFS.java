@@ -77,34 +77,4 @@ public class ParallelBFS<T> {
             System.out.println("No path exist between the source "+src+" and the destination "+dest);
         return minPaths;
     }
-
-
-
-
-//    public static void main(String[] args) {
-//        int[][] myArray = {
-//                {1,0,0},
-//                {1,1,0},
-//                {1,1,0}
-//        };
-//
-//        TraversableMatrix myMatrixGraph = new TraversableMatrix(new Matrix(myArray));
-//        System.out.println(myMatrixGraph);
-//        myMatrixGraph.setStartIndex(new Index(0,0));
-//        ThreadLocalBFS_2<Index> threadLocalBFS = new ThreadLocalBFS_2<>();
-//        Node<Index> src = new Node (new Index(0,0));
-//        Node<Index> dest = new Node (new Index(2,2));
-//        System.out.println(threadLocalBFS.parallelBFS(myMatrixGraph,src,dest));
-//
-//    }
-
-
-    /*
-    create a queue Q
-    mark v as visited and put v into Q
-    while Q is non-empty
-    remove the head u of Q
-    mark and enqueue all (unvisited) neighbours of u
-     */
-
 }

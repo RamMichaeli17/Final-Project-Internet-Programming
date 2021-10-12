@@ -45,9 +45,6 @@ public class ThreadLocalDFSVisit<T> {
             Callable<HashSet<T>> MyCallable = () -> {
                 readWriteLock.writeLock().lock();
                 SomeGraph.setStartIndex(listOfIndex.get(finalI));
-
-                System.out.println("This thread: "+ Thread.currentThread().getName());
-
                 //traverse method warp by callable
                 HashSet<Index> singleSCC = (HashSet<Index>) this.traverse(SomeGraph);
                 readWriteLock.writeLock().unlock();
@@ -78,17 +75,6 @@ public class ThreadLocalDFSVisit<T> {
      */
 
     public Set<T> traverse(Traversable<T> someGraph) {
-        /*
-        push origin to the Stack V
-        while stack is not empty: V
-            removed = pop operation V
-            insert to finished V
-            invoke getReachableNodes method on removed node V
-            for each reachableNode: V
-                if current reachableNode is NOT in stack (just discovered)
-                &&  current reachableNode is NOT in finished
-                push to stack
-         */
         threadLocalStack.get().push(someGraph.getOrigin());
         while (!threadLocalStack.get().isEmpty()) {
             //pop is for stack, poll is for queue
@@ -142,7 +128,7 @@ public class ThreadLocalDFSVisit<T> {
 
     }
     /**
-     * submarine: the function count number of valid submarines:
+     * battleshipCheck: the function count number of valid battleships:
      *  * 1. Minimum of two "1" vertically.
      *  * 2. Minimum of two "1" horizontally.
      *  * 3. There cannot be "1" diagonally unless arguments 1 and 2 are implied.
@@ -153,20 +139,16 @@ public class ThreadLocalDFSVisit<T> {
      * @return int
      */
     public int battleshipCheck(List<HashSet<Index>> hashSetList, int[][] tempArray) {
-        int countSub = hashSetList.size();// size of the optional submarine
+        int countBattleships = hashSetList.size();// size of the optional battleships
         int minRow = Integer.MAX_VALUE, minCol = Integer.MAX_VALUE, maxRow = Integer.MIN_VALUE, maxCol = Integer.MIN_VALUE;
-        int flag = 0;// that flag will be 1 if some scc isn't a submarine and after that countSub--
-        for (HashSet<Index> s : hashSetList) {// run on each SCC
-            for (Index index : s) {
-                if (s.size() == 1)// SCC==1 not a sub
-                    flag = 1;
-
-                if (flag == 1)
-                    countSub--;
-
-                flag = 0;
-
-                if (index.row <= minRow) //Shape boundaries of the submarine in the form of a square or rectangle
+        int flag = 0;// that flag will be 1 if some scc isn't a battleship and after that countBattleships--
+        for (HashSet<Index> singleSCC : hashSetList) {// run on each SCC
+            if (singleSCC.size() == 1) { // SCC==1 not a battleship
+                countBattleships--;
+                break;
+            }
+            for (Index index : singleSCC) {
+                if (index.row <= minRow) //Shape boundaries of the battleship in the form of a square or rectangle
                     minRow = index.row;
                 if (index.column <= minCol)
                     minCol = index.column;
@@ -175,26 +157,25 @@ public class ThreadLocalDFSVisit<T> {
                 if (index.column > maxCol)
                     maxCol = index.column;
             }
-
-            for (int i = minRow; i <= maxRow; i++) {// checking on tempArray if we have a submarine
+            for (int i = minRow; i <= maxRow; i++) {// checking on tempArray if we have a battleship
                 for (int j = minCol; j <= maxCol; j++) {
                     if (tempArray[i][j] == 0) {
                         flag = 1;
+                        break;
                     }
                 }
+                if(flag==1){
+                    countBattleships--;
+                    break;
+                }
             }
-
-            if (flag == 1)
-                countSub--;
             flag = 0;
             minRow = Integer.MAX_VALUE;
             minCol = Integer.MAX_VALUE;
             maxRow = Integer.MIN_VALUE;
             maxCol = Integer.MIN_VALUE;
         }
-        if (countSub < 0)
-            countSub = 0;
-        return countSub;
+        return countBattleships;
     }
 
 }

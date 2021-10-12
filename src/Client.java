@@ -74,9 +74,9 @@ public class Client {
         // [[(0,0), (1,0), (2,0)], [(0,0), (1,1), (2,0)]]
 
         int[][] source3 = {
-                {1,1,1},
                 {0,0,0},
-                {1,1,1}
+                {0,1,1},
+                {0,1,1}
         };
         //output - 2
 
@@ -110,10 +110,10 @@ public class Client {
                     toServer.writeObject("2.1");
                     toServer.writeObject(source2);
                     Matrix matrix = new Matrix(source2);
-                    System.out.println("Now scanning the source node:");
+                    System.out.println("Source node:");
                     Index startIndex = indexRequest(matrix); //input
                     toServer.writeObject(startIndex);
-                    System.out.println("Now scanning the destination node:");
+                    System.out.println("Destination node:");
                     Index endIndex= indexRequest(matrix); //input
                     toServer.writeObject(endIndex);
                     List<List<Index>> minPaths = new ArrayList<>((List<List<Index>>) fromServer.readObject());
@@ -128,10 +128,10 @@ public class Client {
                     toServer.writeObject("2.2");
                     toServer.writeObject(source2);
                     Matrix matrix = new Matrix(source2);
-                    System.out.println("Now scanning the source node:");
+                    System.out.println("Source node:");
                     Index startIndex = indexRequest(matrix); //input
                     toServer.writeObject(startIndex);
-                    System.out.println("Now scanning the destination node:");
+                    System.out.println("Destination node:");
                     Index endIndex= indexRequest(matrix); //input
                     toServer.writeObject(endIndex);
                     List<List<Index>> minPaths = new ArrayList<>((List<List<Index>>) fromServer.readObject());
@@ -157,10 +157,10 @@ public class Client {
                     toServer.writeObject("4");
                     toServer.writeObject(source4); //inputStream from client to server- matrix
                     Matrix matrix= new Matrix(source4);
-                    System.out.println("Now scanning the source node:");
+                    System.out.println("Source node:");
                     Index startIndex = indexRequest(matrix); //input
                     toServer.writeObject(startIndex);
-                    System.out.println("Now scanning the destination node:");
+                    System.out.println("Destination node:");
                     Index endIndex= indexRequest(matrix); //input
                     toServer.writeObject(endIndex);
                     LinkedList<List<Index>> minWeightList = new LinkedList<>((LinkedList<List<Index>>) fromServer.readObject());

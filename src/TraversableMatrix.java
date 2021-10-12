@@ -10,7 +10,6 @@ public class TraversableMatrix implements Traversable<Index> {
     protected final Matrix matrix;
     protected Index startIndex, endIndex;
 
-    //Constructor
     public TraversableMatrix(Matrix matrix) {
         this.matrix = matrix;
     }
@@ -32,11 +31,6 @@ public class TraversableMatrix implements Traversable<Index> {
         this.endIndex = endIndex;
     }
 
-    /**
-     * This method receives some node and returns it value
-     * @param someNode type: Node<Index>
-     * @return int - the value (data) of the node
-     */
     @Override
     public int getValue(Node<Index> someNode) {
         return matrix.getValue(new Index(someNode.getData().row,someNode.getData().column));
@@ -60,14 +54,6 @@ public class TraversableMatrix implements Traversable<Index> {
         return new Node<>(this.endIndex);
     }
 
-
-
-    /**
-     * getReachableNodes() -  this function finds all the neighbors of specific node that their value equals to 1
-     * @param someNode represents starting node
-     * @return list (Collection) of all neighbors of specific node that their value is 1
-     */
-
     @Override
     public Collection<Node<Index>> getReachableNodes(Node<Index> someNode) {
         List<Node<Index>> reachableIndices = new ArrayList<>();
@@ -88,21 +74,8 @@ public class TraversableMatrix implements Traversable<Index> {
             Node<Index> indexNode = new Node<>(index, someNode);
             NeighborIndex.add(indexNode);
         }
-
         return NeighborIndex;
     }
-
-
-    @Override
-    public Collection<Node<Index>> getReachableWeight(Node<Index> someNode){
-        List<Node<Index>> reachableIndex = new ArrayList<>();
-        for(Index index : this.matrix.getNeighbors(someNode.getData())){
-            Node<Index> indexNode = new Node<>(index, someNode);
-            reachableIndex.add(indexNode);
-        }
-        return reachableIndex;
-    }
-
 
     @Override
     public String toString() {
