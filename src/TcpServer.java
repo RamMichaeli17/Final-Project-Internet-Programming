@@ -7,10 +7,19 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /*
+        Application layer:
+            Process to process delivery of data - an instance of a running program is represented by a process.
+            Application layer "thinks" that it communicates with another process running on the local machine
+
         transport layer - multiplexing. send different kinds of data over the communication
 
         Socket - abstraction for 2-way pipeline of data (of certain kind)
-        the kind is determined by the socket number
+        the kind is determined by the socket number.
+        A socket os an endpoint to communicate between 2 machines.
+        An abstraction for a 2-way data pipeline between 2 machines.
+            - Server socket - listens and accepts incoming connections.
+            - Operational socket (Client socket) - read/write to a data stream
+
 */
 
 public class TcpServer {
@@ -99,12 +108,12 @@ public class TcpServer {
             try{
                 readWriteLock.writeLock().lock();
                 if(!stopServer){
-                    if(threadPool!=null)
+                    if(threadPool!=null)// avoid situation that someone stopped the server
+                                         // without ever invoking run method
                         threadPool.shutdown();
                 }
-            }catch (SecurityException se){
-                se.printStackTrace();
-            }finally {
+            }
+            finally {
                 stopServer = true;
                 readWriteLock.writeLock().unlock();
                 System.out.println("Server shut down successfully");
