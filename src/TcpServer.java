@@ -52,7 +52,7 @@ public class TcpServer {
          */
         new Thread(() ->{
 
-           this.threadPool = new ThreadPoolExecutor(3,5,
+            this.threadPool = new ThreadPoolExecutor(3,5,
                     10, TimeUnit.SECONDS, new LinkedBlockingQueue());
 
             try {
@@ -111,7 +111,7 @@ public class TcpServer {
                 readWriteLock.writeLock().lock();
                 if(!stopServer){
                     if(threadPool!=null)// avoid situation that someone stopped the server
-                                         // without ever invoking run method
+                        // without ever invoking run method
                         threadPool.shutdown();
                 }
             }

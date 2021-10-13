@@ -6,6 +6,11 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * This class implement kind of Bellman-Ford algorithm.
+ * We need to find all the lightest paths between 2 nodes(from source to destination)
+ * @param <T>
+ */
 public class ParallelBFS<T> {
     final ThreadLocal<LinkedList<List<Node<T>>>> threadLocalQueue = ThreadLocal.withInitial(() -> new LinkedList<List<Node<T>>>());
 
@@ -33,6 +38,7 @@ public class ParallelBFS<T> {
                 }
             }
         }
+        threadLocalQueue.get().clear();
             return allPaths;
     }
 

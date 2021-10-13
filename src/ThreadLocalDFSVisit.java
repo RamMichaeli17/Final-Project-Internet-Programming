@@ -23,8 +23,8 @@ public class ThreadLocalDFSVisit<T> {
     protected ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock(); //using lock in callable
 
     /**
-     * parallelDFSVisitTraverse function finds SCC parallely.
-     * why hashSet? HashSet is a collection of items where every item is unique - we doesn't want multiplication
+     * parallelDFSVisitTraverse function finds SCC in a parallel way.
+     * why hashSet? HashSet is a collection of items where every item is unique - we don't want multiplication
      *
      * submit is a function that return value, due to we're using Callable.
      *
@@ -32,27 +32,26 @@ public class ThreadLocalDFSVisit<T> {
      * This Future object functions as a handle to the result of the asynchronous task
      *
      * @param SomeGraph represent current Graph (we relate matrix as graph)
-     * @param listOfIndex -list of indexes their value is 1 (connected components are indexes with value 1).
-     * @return HashSet<HashSet<T>> - list of all SCCs in the current graph
+     * @param listOfIndexes -list of indexes their value is 1 (connected components are indexes with value 1).
+     * @return HashSet<HashSet<T>> - all the SCCs in the current graph.
      */
-    public HashSet<HashSet<T>> parallelDFSTraverse(Traversable<T> SomeGraph, List<Index> listOfIndex){
-
+    public HashSet<HashSet<T>> parallelDFSTraverse(Traversable<T> SomeGraph, List<Index> listOfIndexes){
         HashSet<Future<HashSet<T>>> futureListOfScc = new HashSet<>();
         HashSet<HashSet<T>> listIndexScc = new HashSet<>();
-        int listSize=listOfIndex.size();
+        int listSize=listOfIndexes.size();
         for(int i=0; i<listSize; i++) {
             int finalI=i;
             Callable<HashSet<T>> MyCallable = () -> {
                 readWriteLock.writeLock().lock();
-                SomeGraph.setStartIndex(listOfIndex.get(finalI));
+                SomeGraph.setStartIndex(listOfIndexes.get(finalI));
                 //traverse method warp by callable
                 HashSet<Index> singleSCC = (HashSet<Index>) this.traverse(SomeGraph);
                 readWriteLock.writeLock().unlock();
                 return (HashSet<T>) singleSCC;
 
             };
-            Future<HashSet<T>> futureSCC = threadPoolExecutor.submit(MyCallable);
-            futureListOfScc.add(futureSCC);
+            Future<HashSet<T>> futureHashSCCS = threadPoolExecutor.submit(MyCallable);
+            futureListOfScc.add(futureHashSCCS);
         }
         for (Future<HashSet<T>> futureScc : futureListOfScc) {
                 try {
@@ -69,9 +68,8 @@ public class ThreadLocalDFSVisit<T> {
 
     /**
      * traverse -this function execute DFS method by ThreadLocal
-     * @param someGraph represent current Graph (we relating matrix as graph)
-     *
-     * @return List<T> - list of connected component(path).
+     * @param someGraph represent current Graph
+     * @return List<T> - connected component(path).
      */
 
     public Set<T> traverse(Traversable<T> someGraph) {
@@ -91,14 +89,14 @@ public class ThreadLocalDFSVisit<T> {
         for (Node<T> node : threadLocalSet.get()) connectedComponent.add(node.getData());
 
         //A scan cycle does not mean that the copy of the data structure has been deleted, so it is necessary to delete the data in the copy
-        //Old data is saved in that specific thread's copy of the data stracture- we ought to clear between traversals using the same threads.
+        //Old data is saved in that specific thread's copy of the data structure- we ought to clear between traversals using the same threads.
         threadLocalStack.get().clear(); //there is no reason to clear the stack other than readability
         threadLocalSet.get().clear();
         return connectedComponent;
         }
 
     /**
-     * findSCCs- this function get a 2D matrix and finds all scc in this matrix
+     * findSCCs- this function get a 2D matrix and finds all scc in this matrix in a sorted way
      * @param source -primitiveMatrix
      * @return list of SCCs
      */
@@ -106,25 +104,24 @@ public class ThreadLocalDFSVisit<T> {
     public List<HashSet<Index>> findSCCs(int[][] source)
     {
         HashSet<HashSet<Index>> allSCCs;
-        List<Index> listOne;
+        List<Index> listOfAllOneNodes;
         //convert primitive matrix to Matrix
         Matrix sourceMatrix = new Matrix(source);
         sourceMatrix.printMatrix();
 
         //parallelDFSTraverse need to get traversable<T> , list<HashSet<Index>>> :
         TraversableMatrix myTraversableM = new TraversableMatrix(sourceMatrix); //convert Matrix to TraversableMatrix
-        listOne = sourceMatrix.findAllOnes(); //each connected component contains only nodes with value==1
+        listOfAllOneNodes = sourceMatrix.findAllOnes(); //each connected component contains only nodes with value==1
 
         //set the first index - "Initialize start index"
         myTraversableM.setStartIndex(myTraversableM.getStartIndex());
-        ThreadLocalDFSVisit<Index> algo = new ThreadLocalDFSVisit<>();
+        ThreadLocalDFSVisit<Index> threadLocalDFSVisit = new ThreadLocalDFSVisit<>();
 
         //call to parallelDFSTraverse method
-        allSCCs = algo.parallelDFSTraverse(myTraversableM, listOne);
-        List<HashSet<Index>> list = allSCCs.stream().sorted(Comparator.comparingInt(HashSet::size))
+        allSCCs = threadLocalDFSVisit.parallelDFSTraverse(myTraversableM, listOfAllOneNodes);
+        List<HashSet<Index>> listOfAllSCCS = allSCCs.stream().sorted(Comparator.comparingInt(HashSet::size))
                 .collect(Collectors.toList());
-
-        return list;
+        return listOfAllSCCS;
 
     }
     /**
@@ -134,18 +131,18 @@ public class ThreadLocalDFSVisit<T> {
      *  * 3. There cannot be "1" diagonally unless arguments 1 and 2 are implied.
      *  * 4. The minimal distance between two submarines is at least one index("0").
      *
-     * @param hashSetList type: HashSet<HashSet<Index>> list of SCC
-     * @param tempArray type: int[][] the matrix that we send in the beginning
+     * @param hashSetOfSCCS type: HashSet<HashSet<Index>> list of SCC
+     * @param clientMatrix type: int[][] the matrix that we send in the beginning
      * @return int
      */
-    public int battleshipCheck(List<HashSet<Index>> hashSetList, int[][] tempArray) {
-        int countBattleships = hashSetList.size();// size of the optional battleships
+    public int battleshipCheck(List<HashSet<Index>> hashSetOfSCCS, int[][] clientMatrix) {
+        int countBattleships = hashSetOfSCCS.size();// size of the optional battleships
         int minRow = Integer.MAX_VALUE, minCol = Integer.MAX_VALUE, maxRow = Integer.MIN_VALUE, maxCol = Integer.MIN_VALUE;
         int flag = 0;// that flag will be 1 if some scc isn't a battleship and after that countBattleships--
-        for (HashSet<Index> singleSCC : hashSetList) {// run on each SCC
+        for (HashSet<Index> singleSCC : hashSetOfSCCS) {// run on each SCC
             if (singleSCC.size() == 1) { // SCC==1 not a battleship
                 countBattleships--;
-                break;
+                continue;
             }
             for (Index index : singleSCC) {
                 if (index.row <= minRow) //Shape boundaries of the battleship in the form of a square or rectangle
@@ -157,9 +154,9 @@ public class ThreadLocalDFSVisit<T> {
                 if (index.column > maxCol)
                     maxCol = index.column;
             }
-            for (int i = minRow; i <= maxRow; i++) {// checking on tempArray if we have a battleship
+            for (int i = minRow; i <= maxRow; i++) {// checking on clientMatrix if we have a battleship
                 for (int j = minCol; j <= maxCol; j++) {
-                    if (tempArray[i][j] == 0) {
+                    if (clientMatrix[i][j] == 0) {
                         flag = 1;
                         break;
                     }

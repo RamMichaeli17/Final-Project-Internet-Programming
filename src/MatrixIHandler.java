@@ -102,20 +102,20 @@ public class MatrixIHandler implements IHandler {
 
                 case "3":{ //Find number of battleships
 
-                    int[][] tempArray = (int[][]) objectInputStream.readObject();//the matrix that we send(now we read)
+                    int[][] primitiveMatrix = (int[][]) objectInputStream.readObject();//the matrix that we send(now we read)
                     System.out.println("Task 3 - Find number of battleships is running...\nServer: Got 2d array from client");
                     List<HashSet<Index>> listOFHashsets;
                     ThreadLocalDFSVisit<Index> threadLocalDFSVisit = new ThreadLocalDFSVisit<>();
-                    listOFHashsets=threadLocalDFSVisit.findSCCs(tempArray);//list of SCC
-                    int size = threadLocalDFSVisit.battleshipCheck(listOFHashsets, tempArray);
+                    listOFHashsets=threadLocalDFSVisit.findSCCs(primitiveMatrix);//list of SCC
+                    int size = threadLocalDFSVisit.battleshipCheck(listOFHashsets, primitiveMatrix);
                     objectOutputStream.writeObject(size);
                     System.out.println("Task 3 finished\n");
                     break;
                 }
 
-                case "4":{ //Find all lightest paths from source to destination
+                case "4.1":{ //Find all lightest paths from source to destination
                     int[][] primitiveMatrix = (int[][])objectInputStream.readObject();
-                    System.out.println("Task 4 - Find all lightest paths from source to destination is running...\nServer: Got 2d array from client");
+                    System.out.println("Task 4.1 - Find all lightest paths from source to destination is running...\nServer: Got 2d array from client");
                     this.matrix=new Matrix(primitiveMatrix);
                     matrix.printMatrix();
                     Index src, dest;
@@ -123,14 +123,35 @@ public class MatrixIHandler implements IHandler {
                     System.out.println("From client - source index is: "+ src);
                     dest=(Index)objectInputStream.readObject();
                     System.out.println("From client - destination index is: "+ dest);
-                    TraversableMatrix traversable4 = new TraversableMatrix(this.matrix);
-                    traversable4.setStartIndex(src);
-                    traversable4.setEndIndex(dest);
-                    ThreadLocalBellmanFord threadLocalBellmanFord= new ThreadLocalBellmanFord();
-                    LinkedList<List<Index>> minWeightList;
-                    minWeightList = threadLocalBellmanFord.findLightestPathsBellmanFord(traversable4, traversable4.getOrigin(), traversable4.getDestination());
+                    TraversableMatrix traversable41 = new TraversableMatrix(this.matrix);
+                    traversable41.setStartIndex(src);
+                    traversable41.setEndIndex(dest);
+                    ThreadLocalBellmanFord threadLocalBellmanFord = new ThreadLocalBellmanFord();
+                    List<List<Index>> minWeightList;
+                    minWeightList = threadLocalBellmanFord.findLightestPathsBellmanFord(traversable41, traversable41.getOrigin(), traversable41.getDestination());
                     objectOutputStream.writeObject(minWeightList);
-                    System.out.println("Task 4 finished\n");
+                    System.out.println("Task 4.1 finished\n");
+                    break;
+                }
+
+                case "4.2":{ //Find all lightest paths from source to destination
+                    int[][] primitiveMatrix = (int[][])objectInputStream.readObject();
+                    System.out.println("Task 4.2 - Parallel - Find all lightest paths from source to destination is running...\nServer: Got 2d array from client");
+                    this.matrix=new Matrix(primitiveMatrix);
+                    matrix.printMatrix();
+                    Index src, dest;
+                    src=(Index)objectInputStream.readObject();
+                    System.out.println("From client - source index is: "+ src);
+                    dest=(Index)objectInputStream.readObject();
+                    System.out.println("From client - destination index is: "+ dest);
+                    TraversableMatrix traversable42 = new TraversableMatrix(this.matrix);
+                    traversable42.setStartIndex(src);
+                    traversable42.setEndIndex(dest);
+                    ParallelBellmanFord parallelBellmanFord = new ParallelBellmanFord();
+                    LinkedList<List<Index>> minWeightList;
+                    minWeightList = parallelBellmanFord.findLightestPathsParallelBellmanFord(traversable42, traversable42.getOrigin(), traversable42.getDestination());
+                    objectOutputStream.writeObject(minWeightList);
+                    System.out.println("Task 4.2 finished\n");
                     break;
                 }
 
