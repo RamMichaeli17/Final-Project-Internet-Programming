@@ -3,10 +3,22 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
+/**
+ * This class implement kind of BFS algorithm.
+ * We need to find all the shortest paths between 2 nodes(from source to destination)
+ * How?
+ * find all shortest paths by loop all over the paths and check size of the path- in findShortestPathsBFS method
+ */
 public class ThreadLocalBFS<T> {
     final ThreadLocal<LinkedList<List<Node<T>>>> threadLocalQueue = ThreadLocal.withInitial(() -> new LinkedList<List<Node<T>>>());
 
+    /**
+     * findShortestPathsBFS: The function finds all the shortest paths from source to destination
+     * @param someGraph represent a graph
+     * @param src represent start index
+     * @param dest represent final/ destination index
+     * @return List<List < Node < T>>> - all shortest paths between source to destination
+     */
     public List<List<Node<T>>> findShortestPathsBFS(Traversable<T> someGraph, Node<T> src, Node<T> dest) {
         int sizeOfMinPath=Integer.MAX_VALUE;
         List<List<Node<T>>> minPaths = new ArrayList<>();

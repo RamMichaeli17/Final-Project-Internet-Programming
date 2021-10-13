@@ -19,7 +19,7 @@ public class ThreadLocalBellmanFord<T>  {
      * @param someGraph represent a graph
      * @param src represent start index
      * @param dest represent final/ destination index
-     * @return List<List<Node<T>>> - all paths between source to destination
+     * @return List<List<Node<T>>> - all lightest paths between source to destination
      */
 
     public List<List<Node<T>>> findLightestPathsBellmanFord(Traversable<T> someGraph, Node<T> src, Node<T> dest) {

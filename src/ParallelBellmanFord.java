@@ -10,8 +10,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * How?
  * (1)find all paths from source to destination - with findPaths method
  * (2)find the weight of each path - with SumPathWeight method
- * (3)find all min paths by loop all over the paths and check the min weight - in findLightestPathsParallelBellmanFord method - parallel
- *
+ * (3)find all lightest paths by loop all over the paths and check the min weight - in findLightestPathsParallelBellmanFord method - parallel
  */
 public class ParallelBellmanFord<T> {
 

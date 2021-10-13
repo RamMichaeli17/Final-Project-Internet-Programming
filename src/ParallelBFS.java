@@ -7,9 +7,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * This class implement kind of Bellman-Ford algorithm.
- * We need to find all the lightest paths between 2 nodes(from source to destination)
- * @param <T>
+ * This class implement kind of BFS algorithm.
+ * We need to find all the shortest paths between 2 nodes(from source to destination)
+ * How?
+ * (1)find all paths from source to destination - with findPaths method
+ * (2)find all shortest paths by loop all over the paths and check size of the path- in findShortestPathsParallelBFS method - parallel
  */
 public class ParallelBFS<T> {
     final ThreadLocal<LinkedList<List<Node<T>>>> threadLocalQueue = ThreadLocal.withInitial(() -> new LinkedList<List<Node<T>>>());
@@ -17,7 +19,13 @@ public class ParallelBFS<T> {
     public ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(5, 10, 1000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
     protected ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-
+    /**
+     * findAllPaths: The function finds paths from src to dest by ThreadLocal
+     * @param someGraph represent a graph
+     * @param src represent start index
+     * @param dest represent final/ destination index
+     * @return List<List < Node < T>>> - all paths between source to destination
+     */
     public List<List<Node<T>>> findAllPaths (Traversable<T> someGraph,Node<T> src, Node<T> dest)
     {
         ArrayList<Node<T>> path = new ArrayList<>();
@@ -41,9 +49,22 @@ public class ParallelBFS<T> {
         threadLocalQueue.get().clear();
             return allPaths;
     }
-
+    /**
+     * findShortestPathsParallelBFS: the function calls to findPaths method and
+     * finds the shortest paths in a parallel way
+     * each search wrap in callable
+     *
+     * @param someGraph represent a graph
+     * @param src represent start index
+     * @param dest represent final/ destination index
+     * @return List<List < Node < T>>> - all the shortest paths between source node to destination
+     */
     public List<List<Node<T>>> findShortestPathsParallelBFS(Traversable<T> someGraph, Node<T> src, Node<T> dest) {
-        //למה אטומיק
+        /**
+         * The primary use of AtomicInteger is when we are in multi-threaded context, and we need to perform atomic operations on an int value without using synchronized keyword.
+         * Using the AtomicInteger is equally faster and more readable than performing the same using synchronization.
+         * We are using AtomicInteger as an atomic counter which is being used by multiple threads concurrently.
+         */
         AtomicInteger sizeOfMinPath = new AtomicInteger();
         AtomicInteger sizeOfPath = new AtomicInteger();
         sizeOfMinPath.set(Integer.MAX_VALUE);
