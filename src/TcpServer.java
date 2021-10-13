@@ -45,9 +45,11 @@ public class TcpServer {
         /*
          A server can do many things. Dealing with listening to clients and initial
          support is done in a separate thread
+
+
+
+         warp clientHandling Runnable by another thread -
          */
-
-
         new Thread(() ->{
 
            this.threadPool = new ThreadPoolExecutor(3,5,
