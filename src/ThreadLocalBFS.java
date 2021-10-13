@@ -34,6 +34,7 @@ public class ThreadLocalBFS<T> {
         }
         if (minPaths.isEmpty())
             System.out.println("No path exist between the source "+src+" and the destination "+dest);
+        threadLocalQueue.get().clear();
         return minPaths;
 
     }

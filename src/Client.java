@@ -40,7 +40,8 @@ public class Client {
         System.out.println("2.1--> Find all shortest paths from source to destination [second task]");
         System.out.println("2.2--> *Parallel* Find all shortest paths from source to destination [second task]");
         System.out.println("3--> Find number of battleships [third task]");
-        System.out.println("4--> Find all lightest paths from source to destination [fourth task]");
+        System.out.println("4.1--> Find all lightest paths from source to destination [fourth task]");
+        System.out.println("4.2--> *Parallel* Find all lightest paths from source to destination [fourth task]");
         System.out.println("stop--> Exit the program");
     }
 
@@ -71,7 +72,29 @@ public class Client {
 //                {0, 0, 1, 0, 1},
 //                {0, 0, 1, 0, 1},
 
-                // output - [[(0,0)],[(0,4)] [(1,2), (2,2), (3,2), (4,2)], [(3,4), (4,4)]]
+                // output - [[(0,0)], [(0,4)], [(4,4), (3,4)], [(3,2), (2,2), (1,2), (4,2)]]
+
+//                {1, 0, 0, 1, 1,0, 1, 0, 1, 0},
+//                {0, 1, 0, 0, 0,0, 0, 1, 0, 0},
+//                {0, 0, 0, 0, 0,1, 0, 0, 1, 0},
+//                {0, 0, 1, 0, 1,1, 0, 0, 0, 0},
+//                {0, 1, 1, 0, 0,1, 0, 0, 0, 1},
+//                {1, 0, 1, 0, 0,1, 0, 0, 0, 0},
+//                {0, 0, 1, 0, 0,1, 0, 0, 1, 0},
+//                {0, 0, 1, 0, 0,1, 0, 0, 0, 0},
+//                {1, 0, 1, 0, 0,1, 0, 1, 1, 1},
+//                {1, 0, 1, 0, 0,1, 0, 0, 1, 1}
+
+                //output:
+                // [[(6,8)],
+                // [(4,9)],
+                // [(9,0), (8,0)],
+                // [(0,0), (1,1)],
+                // [(0,3), (0,4)],
+                // [(0,8), (1,7), (0,6), (2,8)],
+                // [(9,8), (8,7), (8,8), (9,9), (8,9)],
+                // [(3,2), (9,2), (8,2), (5,0), (7,2), (6,2), (4,1), (5,2), (4,2)],
+                // [(6,5), (5,5), (4,5), (3,4), (3,5), (2,5), (9,5), (8,5), (7,5)]]
 
         };
 
@@ -92,12 +115,29 @@ public class Client {
 
                 //output from (0,0) to (4,2) will be:
                 // [[(0,0), (1,1), (2,1), (3,2), (4,2)], [(0,0), (1,1), (2,2), (3,2), (4,2)]]
+
+//                {1, 0, 1, 1, 1,1, 0, 0, 0, 0},
+//                {0, 1, 1, 1, 1,1, 0, 0, 0, 0},
+//                {0, 1, 1, 1, 0,1, 0, 0, 0, 0},
+//                {0, 0, 1, 0, 1,1, 0, 1, 0, 0},
+//                {0, 1, 1, 0, 0,1, 0, 0, 0, 0},
+//                {1, 0, 1, 0, 0,1, 0, 0, 0, 0},
+//                {0, 0, 1, 0, 0,1, 0, 0, 1, 0},
+//                {0, 0, 1, 0, 0,1, 1, 0, 0, 0},
+//                {0, 0, 1, 0, 0,1, 0, 1, 1, 1},
+//                {1, 0, 1, 0, 0,1, 0, 0, 1, 1}
+//
+//                //output from (0,0) to (9,9) will be:
+//                // [[(0,0), (1,1), (1,2), (2,3), (3,4), (4,5), (5,5), (6,5), (7,6), (8,7), (8,8), (9,9)],
+//                // [(0,0), (1,1), (1,2), (2,3), (3,4), (4,5), (5,5), (6,5), (7,6), (8,7), (9,8), (9,9)],
+//                // [(0,0), (1,1), (2,2), (2,3), (3,4), (4,5), (5,5), (6,5), (7,6), (8,7), (8,8), (9,9)],
+//                // [(0,0), (1,1), (2,2), (2,3), (3,4), (4,5), (5,5), (6,5), (7,6), (8,7), (9,8), (9,9)]]
         };
 
 
         int[][] source3 = {
+                {1,1,0},
                 {0,0,0},
-                {0,1,1},
                 {0,1,1}
 
                 //output - 2
@@ -109,25 +149,38 @@ public class Client {
 //                {1, 0, 1, 0, 1}
 
                 //output - 4
+
+//                {1, 1, 0, 1, 1,0, 1, 1, 1, 0},
+//                {1, 1, 0, 1, 0,0, 0, 0, 0, 0},
+//                {0, 0, 0, 0, 0,0, 0, 0, 0, 0},
+//                {0, 0, 1, 1, 1,1, 0, 1, 0, 1},
+//                {0, 0, 0, 0, 0,0, 0, 1, 0, 1},
+//                {1, 0, 1, 0, 0,1, 0, 1, 0, 0},
+//                {0, 0, 1, 0, 0,1, 0, 1, 0, 0},
+//                {0, 1, 1, 0, 0,1, 0, 0, 0, 0},
+//                {1, 0, 1, 0, 0,1, 0, 0, 1, 1},
+//                {1, 0, 1, 0, 0,1, 0, 0, 1, 1}
+
+                //output - 7
         };
 
 
         int[][] source4 ={
-                {100,100,100},
-                {300,900,500},
-                {100,100,100}
+//                {100,100,100},
+//                {300,900,500},
+//                {100,100,100}
 
                 // output from (1,0) to (1,2) will be:
                 // [[(1,0),(0,1),(1,2)],[(1,0),(2,1),(1,2)]] , with weight 900 - it also includes diagonals.
 
-//
-//                {100, 500, 100, 500},
-//                {200, 500, 100, 100},
-//                {300, 500, 100, 100},
-//                {400, 500, 200, 800}
 
-                // output from (0,0) to (1,2) will be:
-                // [[(0,0), (0,1), (1,2)], [(0,0), (1,1), (1,2)]] , with weight 700 - it also includes diagonals.
+                {100, 300, 200, 500},
+                {200, 500, 900, 500},
+                {300, 5000, 1100, 600},
+                {400, 900, 200, 100}
+
+                // output from (0,0) to (3,3) will be:
+                // [[(0,0), (1,1), (2,2), (3,3)], [(0,0), (1,0), (2,0), (3,1), (3,2), (3,3)], [(0,0), (0,1), (0,2), (1,3), (2,3), (3,3)]] , with weight 1800 - it also includes diagonals.
 
         };
 
@@ -142,7 +195,8 @@ public class Client {
                     toServer.writeObject("1"); //inputStream from client to server- chosen task
                     toServer.writeObject(source1); //inputStream from client to server- matrix
                     //server transfers data to client.
-                    HashSet<HashSet<Index>> listOfSCCs = new HashSet<>((List<HashSet<Index>>) fromServer.readObject());
+                    List<HashSet<Index>> listOfSCCs = new ArrayList<>((List<HashSet<Index>>) fromServer.readObject()) {
+                    };
                     System.out.println("From server: Strongly connected components are: " + listOfSCCs);
                     System.out.println("From client: Task 1 finished\n");
                     scanner.nextLine();
@@ -196,9 +250,27 @@ public class Client {
                     break;
                 }
 
-                case "4": {
-                    System.out.println("From client: Task 4 is running...");
-                    toServer.writeObject("4");
+                case "4.1": {
+                    System.out.println("From client: Task 4.1 is running...");
+                    toServer.writeObject("4.1");
+                    toServer.writeObject(source4); //inputStream from client to server- matrix
+                    Matrix matrix= new Matrix(source4);
+                    System.out.println("Source node:");
+                    Index startIndex = indexRequest(matrix); //input
+                    toServer.writeObject(startIndex);
+                    System.out.println("Destination node:");
+                    Index endIndex= indexRequest(matrix); //input
+                    toServer.writeObject(endIndex);
+                    List<List<Index>> minWeightList = new ArrayList<>((List<List<Index>>) fromServer.readObject());
+                    System.out.println("From server: Lightest paths from source " + startIndex + " to destination " + endIndex + " are:\n" + minWeightList);
+                    System.out.println("From client: Task 4.1 finished\n");
+                    scanner.nextLine();
+                    break;
+                }
+
+                case "4.2": {
+                    System.out.println("From client: Task 4.2 is running...");
+                    toServer.writeObject("4.2");
                     toServer.writeObject(source4); //inputStream from client to server- matrix
                     Matrix matrix= new Matrix(source4);
                     System.out.println("Source node:");
@@ -209,10 +281,11 @@ public class Client {
                     toServer.writeObject(endIndex);
                     LinkedList<List<Index>> minWeightList = new LinkedList<>((LinkedList<List<Index>>) fromServer.readObject());
                     System.out.println("From server: Lightest paths from source " + startIndex + " to destination " + endIndex + " are:\n" + minWeightList);
-                    System.out.println("From client: Task 4 finished\n");
+                    System.out.println("From client: Task 4.2 finished\n");
                     scanner.nextLine();
                     break;
                 }
+
                 case "stop": {
                     flag = true;
                     toServer.writeObject("stop");
