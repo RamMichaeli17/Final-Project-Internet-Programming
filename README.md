@@ -1,4 +1,4 @@
-# Final Project-Internet Programming course
+# Final Project - Internet Programming
 
 TCP server and client in multi-threading.
 
